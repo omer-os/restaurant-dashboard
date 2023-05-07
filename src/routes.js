@@ -1,16 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import SignUp from './pages/SignUp';
+import Layout from './containers/Layout'
 
-const Routes = () => (
-  <Router>
-    <Switch>
-      {/* <Route path="/login" component={Login} /> */}
-      <Route path="/signup" component={SignUp} />
+const App = () => {
+  return (
+    <Router>
+      <Layout>
+        <Routes>
+          <Route exact path="/signup" element={<SignUp/>}/>
+        </Routes>
+      </Layout>
+    </Router>
+  );
+}
 
-      {/* Add more routes as needed */}
-    </Switch>
-  </Router>
-);
-
-export default Routes;
+export default App;
