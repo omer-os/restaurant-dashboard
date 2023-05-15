@@ -1,0 +1,73 @@
+import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+
+const button = cva(
+  "button transition-all active:scale-95 rounded flex items-center justify-center gap-2",
+  {
+    variants: {
+      intent: {
+        primary: "bg-black text-white active:opacity-80",
+        secondary: "bg-white text-black active:text-white active:bg-black",
+        ghost: "bg-zinc-200 hover:bg-zinc-300",
+        borderedSecondary:
+          "border border-black active:bg-black active:text-white",
+        borderedPrimary:
+          "border border-white bg-black active:text-white text-white ",
+      },
+      size: {
+        sm: "text-sm py-1 px-2",
+        md: "text-base py-2 px-4",
+        lg: "text-lg py-3 px-6",
+        xl: "text-xl py-4 px-8",
+      },
+
+      rounded: {
+        full: "rounded-full",
+      },
+
+      width: {
+        full: "w-full",
+      },
+    },
+    defaultVariants: {
+      intent: "primary",
+      size: "md",
+    },
+  }
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof button> {
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+
+  iconButton?: boolean;
+}
+
+export const Button: React.FC<ButtonProps> = ({
+  className,
+  intent,
+  size,
+  rounded,
+  width,
+  iconButton,
+  ...props
+}) => (
+  <button
+    className={
+      button({
+        intent,
+        size,
+        rounded,
+        width,
+        className,
+      }) + `${iconButton ? " py-3 px-3" : ""}`
+    }
+    {...props}
+  >
+    {props.startIcon}
+    {props.children}
+    {props.endIcon}
+  </button>
+);
