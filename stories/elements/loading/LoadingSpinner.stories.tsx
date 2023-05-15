@@ -1,4 +1,5 @@
 import LoadingSpinner from "@components/elements/loading/LoadingSpinner";
+import { StoryFn } from "@storybook/react";
 
 export default {
   title: "elements/LoadingSpinner",

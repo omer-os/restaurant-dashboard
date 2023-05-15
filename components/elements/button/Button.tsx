@@ -39,8 +39,8 @@ const button = cva(
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof button> {
-  startIcon?: React.ReactNode;
-  endIcon?: React.ReactNode;
+  starticon?: React.ReactNode;
+  endicon?: React.ReactNode;
 
   iconButton?: boolean;
 }
@@ -66,8 +66,8 @@ export const Button: React.FC<ButtonProps> = ({
     }
     {...props}
   >
-    {props.startIcon}
+    {props.starticon}
     {props.children}
-    {props.endIcon}
+    {props.endicon}
   </button>
 );

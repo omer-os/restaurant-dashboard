@@ -11,6 +11,6 @@ const Template: StoryFn<typeof Button> = (args) => <Button {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
-  endIcon: <FaClosedCaptioning />,
+  endicon: <FaClosedCaptioning />,
   iconButton: true,
 };

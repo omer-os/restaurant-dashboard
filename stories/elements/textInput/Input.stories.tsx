@@ -15,7 +15,7 @@ const Template: StoryFn<typeof Input> = (args) => {
       State={State}
       setState={setState}
       placeholder="Placeholder"
-      startIcon={<FaSpinner />}
+      starticon={<FaSpinner />}
     />
   );
 };

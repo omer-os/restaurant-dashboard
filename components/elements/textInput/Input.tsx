@@ -21,16 +21,16 @@ interface Props extends VariantProps<typeof InputStyles> {
   State: string;
   setState: (value: string) => void;
   placeholder: string;
-  startIcon?: React.ReactNode;
-  endIcon?: React.ReactNode;
+  starticon?: React.ReactNode;
+  endicon?: React.ReactNode;
 }
 
 export default function Input({
   State,
   setState,
   placeholder,
-  startIcon,
-  endIcon,
+  starticon,
+  endicon,
   bg,
   ...props
 }: Props) {
@@ -42,7 +42,7 @@ export default function Input({
         }) + " relative "
       }
     >
-      <span className="absolute top-3.5 left-3.5">{startIcon}</span>
+      <span className="absolute top-3.5 left-3.5">{starticon}</span>
       <input
         type="text"
         value={State}
@@ -50,14 +50,11 @@ export default function Input({
         placeholder={placeholder}
         className={`w-full bg-transparent rounded px-4 py-3
         
-        ${startIcon ? "pl-10" : ""}
-        ${endIcon ? "pr-10" : ""}
+        ${starticon ? "pl-10" : ""}
+        ${endicon ? "pr-10" : ""}
         `}
       />
-      <span className="absolute top-2.5 left-2.5">{endIcon}</span>
+      <span className="absolute top-2.5 left-2.5">{endicon}</span>
     </div>
   );
 }
-
-
-

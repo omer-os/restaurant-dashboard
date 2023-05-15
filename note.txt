@@ -1,0 +1,22 @@
+Restaurant Profile:
+Ability to view and edit their restaurant's information (name, logo, address, phone number, social media accounts, location on a map).
+
+Menu Management:
+Ability to add, edit, and delete menu items.
+Ability to categorize menu items.
+Ability to add images to menu items.
+Overview of their menu (number of items, categories, etc.).
+
+Subscription Management:
+Overview of their current subscription (free or professional).
+Ability to upgrade or downgrade their subscription.
+Alert when nearing the limit of their subscription (for example, if they are near the 20-item limit for a free subscription).
+
+Branding:
+Ability to customize their restaurant branding (logo, color scheme, etc.).
+Ability to view how their branding appears to customers.
+
+Order Management:
+Overview of all orders with details (order number, customer name, menu items ordered, total price, order status, order time).
+Ability to update the status of an order (e.g., received, in preparation, ready for pickup/delivery, completed).
+Ability to view past orders and their details.

@@ -2,6 +2,9 @@ import { Metadata } from "next";
 import "styles/globals.css";
 
 import { Cairo } from "next/font/google";
+import BottomNav from "@components/templates/bottomNav/BottomNav";
+import { FaAddressBook, FaHome, FaSearch } from "react-icons/fa";
+import MainLayout from "@components/pages/layouts/MainLayout";
 
 const cairo = Cairo({
   variable: "--cairo",
@@ -10,16 +13,8 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  title: "JoodLand Travel",
-  description:
-    "Book flights effortlessly. Find the best deals from top airlines and book your next flight with ease.",
-  keywords: ["book flights", "travel", "flight tickets"],
-  openGraph: {
-    title: "JoodLand Travel",
-    description:
-      "Book flights effortlessly. Find the best deals from top airlines and book your next flight with ease.",
-    images: ["/images/metadata_bg.jpg"],
-  },
+  title: "Restaurant Dashboard",
+  description: "Restaurant Dashboard - Next.js",
 };
 
 export default function RootLayout({
@@ -29,7 +24,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cairo.className}>{children}</body>
+      <body className={cairo.className}>
+        <MainLayout>{children}</MainLayout>
+      </body>
     </html>
   );
 }
