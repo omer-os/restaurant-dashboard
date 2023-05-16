@@ -1,5 +1,6 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import LoadingSpinner from "../loading/LoadingSpinner";
 
 const button = cva(
   "button transition-all active:scale-95 rounded flex items-center justify-center gap-2",
@@ -43,6 +44,7 @@ export interface ButtonProps
   endicon?: React.ReactNode;
 
   iconButton?: boolean;
+  loading?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -69,5 +71,7 @@ export const Button: React.FC<ButtonProps> = ({
     {props.starticon}
     {props.children}
     {props.endicon}
+
+    {props.loading && <LoadingSpinner />}
   </button>
 );

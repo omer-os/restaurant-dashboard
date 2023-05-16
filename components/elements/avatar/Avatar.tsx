@@ -28,13 +28,7 @@ interface Props extends VariantProps<typeof style> {
   alt: string;
 }
 
-export default function Avatar({
-  rounded,
-  src = "",
-  alt,
-  size,
-  ...props
-}: Props) {
+export default function Avatar({ rounded, src, alt, size, ...props }: Props) {
   return (
     <div
       className={style({
@@ -42,7 +36,12 @@ export default function Avatar({
         rounded,
       })}
     >
-      <Image src={src} className="w-full h-full object-cover" fill alt={alt} />
+      <Image
+        src={src || "https://placehold.co/100x100"}
+        className="w-full h-full object-cover"
+        fill
+        alt={alt || "Avatar"}
+      />
     </div>
   );
 }

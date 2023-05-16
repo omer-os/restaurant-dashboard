@@ -1,6 +1,4 @@
-"use client";
-import RestaurantInfoCard from "@components/blocks/cards/RestaurantInfoCard";
-import React, { useState } from "react";
+import RestaurantInfoCard from "@components/templates/restaurantInfo/RestaurantInfoCard";
 
 export default function Page() {
   return (

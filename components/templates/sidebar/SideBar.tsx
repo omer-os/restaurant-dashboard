@@ -33,6 +33,8 @@ export default function SideBar({
         <div className="bg-white h-full flex flex-col p-4">
           {/* Content for Sidebar */}
 
+         
+
           <div className="flex flex-col items-center text-center">
             <Avatar
               size={"xl"}
@@ -48,6 +50,9 @@ export default function SideBar({
               reprehenderit suscipit voluptates molestias obcaecati!
             </div>
           </div>
+
+
+
 
           <div className="my-4">
             <Divider />

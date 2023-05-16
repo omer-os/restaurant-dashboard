@@ -1,3 +1,4 @@
+import { UserButton } from "@clerk/nextjs";
 import { Button } from "@components/elements/button/Button";
 import Link from "next/link";
 import { FaBars } from "react-icons/fa";
@@ -16,9 +17,13 @@ export default function MainNav({
         <Link href="/" className="text-xl font-bold">
           Navbar
         </Link>
-        <button className="lg:hidden" onClick={toggleSidebar}>
-          {isSidebarOpen ? <MdOutlineClose /> : <FaBars />}
-        </button>
+        <div className="flex gap-2">
+          <button className="lg:hidden" onClick={toggleSidebar}>
+            {isSidebarOpen ? <MdOutlineClose /> : <FaBars />}
+          </button>
+
+          <UserButton />
+        </div>{" "}
       </div>
     </header>
   );

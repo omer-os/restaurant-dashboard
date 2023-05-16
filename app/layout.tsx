@@ -1,10 +1,8 @@
 import { Metadata } from "next";
 import "styles/globals.css";
-
 import { Cairo } from "next/font/google";
-import BottomNav from "@components/templates/bottomNav/BottomNav";
-import { FaAddressBook, FaHome, FaSearch } from "react-icons/fa";
 import MainLayout from "@components/pages/layouts/MainLayout";
+import { ClerkProvider } from "@clerk/nextjs/app-beta";
 
 const cairo = Cairo({
   variable: "--cairo",
@@ -23,10 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={cairo.className}>
-        <MainLayout>{children}</MainLayout>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={cairo.className}>
+          <MainLayout>{children}</MainLayout>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
