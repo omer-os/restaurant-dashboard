@@ -21,11 +21,13 @@ type Restaurant = {
 };
 
 type Menu = {
+  id?: string;
   restaurantId: string;
   name: string;
   description: string;
   createdAt: Date;
   updatedAt: Date;
+  image: string;
 };
 
 type MenuItem = {

@@ -30,6 +30,7 @@ const config: StorybookConfig = {
       "@": path.resolve(__dirname, "../"),
       "@components": path.resolve(__dirname, "../components"),
       "@styles": path.resolve(__dirname, "../styles"),
+      "@lib": path.resolve(__dirname, "../lib"),
     };
 
     return config;

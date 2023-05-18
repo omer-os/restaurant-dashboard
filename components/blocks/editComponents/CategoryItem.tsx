@@ -5,18 +5,21 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Divider from "@components/elements/divider/Divider";
-const FormHandeler = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const formData = new FormData(e.currentTarget);
+import { doc, updateDoc } from "firebase/firestore";
+import { db, storage } from "@lib/firebase";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
-  const name = formData.get("name");
-  const description = formData.get("description");
-  const image = formData.get("image");
-  console.log(name, description, image);
-};
-
-export default function CategoryItem() {
+export default function CategoryItem({
+  menu,
+  restaurantId,
+}: {
+  menu: Menu;
+  restaurantId: string;
+}) {
   const [Open, setOpen] = useState(false);
+  const [Name, setName] = useState(menu.name);
+  const [Description, setDescription] = useState(menu.description);
+  const [Image, setImage] = useState<string | any>(menu.image);
 
   const ref: any = useRef();
   useEffect(() => {
@@ -38,14 +41,11 @@ export default function CategoryItem() {
     >
       <div className="flex justify-between items-center">
         <div className="flex gap-3">
-          <Avatar
-            src="https://avatars.githubusercontent.com/u/66512898?s=40&v=4"
-            alt="avatar"
-            rounded={"md"}
-            size={"sm"}
-          />
+          <Avatar src={menu.image} alt="avatar" rounded={"md"} size={"sm"} />
 
-          <div className="text-xl font-bold truncate max-w-[8em]">burgers</div>
+          <div className="text-xl font-bold truncate max-w-[8em]">
+            {menu.name}
+          </div>
         </div>
 
         <div className="flex items-center gap-5">
@@ -73,23 +73,44 @@ export default function CategoryItem() {
       >
         <form
           className="flex mt-5 flex-col sm:gap-2 gap-3"
-          onSubmit={FormHandeler}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setOpen(false);
+
+            // update the image in the storage
+            const storageRef = storage.ref(`menus/${menu.id}`);
+            const uploadTask = storageRef.put(Image);
+
+            const menuRef = doc(
+              db as any,
+              "restaurants",
+              restaurantId,
+              "menus",
+              menu.id as string
+            );
+
+            uploadTask.then(async (snapshot) => {
+              const downloadURL = await getDownloadURL(snapshot.ref);
+              await updateDoc(menuRef, {
+                image: downloadURL,
+              });
+            });
+          }}
         >
           {[
             {
               type: "text",
               name: "name",
               placeholder: "name of the category",
+              Value: Name,
+              setValue: setName,
             },
             {
               type: "text",
               name: "description",
               placeholder: "description of the category",
-            },
-            {
-              type: "file",
-              name: "image",
-              placeholder: "image of the category",
+              Value: Description,
+              setValue: setDescription,
             },
           ].map((i, index) => (
             <div key={index} className="flex sm:flex-row flex-col sm:gap-2">
@@ -103,9 +124,22 @@ export default function CategoryItem() {
                 className="border rounded w-full text-lg p-2"
                 placeholder={i.placeholder}
                 accept="image/*"
+                value={i.Value as any}
+                onChange={(e) => i.setValue(e.target.value as any)}
               />
             </div>
           ))}
+
+          <div className="flex sm:flex-row flex-col sm:gap-2">
+            <div className="w-1/4 capitalize text-lg font-bold">image:</div>
+            <input
+              type="file"
+              name="image"
+              className="border rounded w-full text-lg p-2"
+              accept="image/*"
+              onChange={(e) => setImage(e.target?.files?[0] : Image)}
+            />
+          </div>
 
           <Divider />
 

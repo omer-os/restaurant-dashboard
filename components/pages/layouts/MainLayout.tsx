@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import "react-datasheet-grid/dist/style.css";
 import { useAuth } from "@clerk/nextjs";
-import app from "@lib/firebase";
-import { getAuth, signInWithCustomToken } from "firebase/auth";
+import app, { auth } from "@lib/firebase";
 import { getRestaurantByOwnerId } from "@lib/firebaseFunctions/getResturant";
+import { getAuth, signInWithCustomToken } from "firebase/auth";
 
 export default function MainLayout({
   children,
@@ -25,7 +25,6 @@ export default function MainLayout({
 
   useEffect(() => {
     const sginInWithClerck = async () => {
-      const auth = getAuth(app);
       const token = await getToken({ template: "integration_firebase" });
       const userCredentials = await signInWithCustomToken(
         auth,
