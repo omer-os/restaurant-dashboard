@@ -1,103 +1,54 @@
 "use client";
 
+import { useContext, useEffect, useState } from "react";
 import {
   DataSheetGrid,
   textColumn,
   keyColumn,
   Column,
 } from "react-datasheet-grid";
-import { useState } from "react";
 import Avatar from "@components/elements/avatar/Avatar";
-import MenuItemsTable from "@components/blocks/tables/MenuItemsTable";
+import {
+  getMenuData,
+  getMenusByRestaurantId,
+  updateMenuData,
+} from "@lib/firebaseFunctions/Menus";
+import { RestaurantContext } from "@components/pages/layouts/MainLayout";
 
-type Category = {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-};
+export default function MenuTable() {
+  const [data, setData] = useState<Menu[]>([]);
+  const { restarant } = useContext(RestaurantContext);
 
-export default function CategoriesTable() {
-  const [data, setData] = useState<Category[]>([
-    {
-      id: "1",
-      name: "Category 1",
-      description: "Description 1",
-      image: "https://avatars.githubusercontent.com/u/22380818?s=48&v=4",
-    },
-    {
-      id: "2",
-      name: "Category 1",
-      description: "Description 1",
-      image: "https://avatars.githubusercontent.com/u/22380818?s=48&v=4",
-    },
-    {
-      id: "3",
-      name: "Category 1",
-      description: "Description 1",
-      image: "https://avatars.githubusercontent.com/u/22380818?s=48&v=4",
-    },
-  ]);
+  const handleChange = (newData: Menu[]) => {
+    setData(newData);
+  };
 
-  const columns: Column<Category>[] = [
+  if (restarant && restarant.id) {
+    getMenusByRestaurantId(restarant.id).then((menus) => {
+      setData(menus as any);
+    });
+  }
+
+  const columns: Column<Menu>[] = [
     {
-      ...keyColumn("id", textColumn as Column<string>),
-      title: "ID",
+      ...keyColumn("restaurantId", textColumn as Column<string>),
+      title: "Restaurant ID",
     },
     {
       ...keyColumn("name", textColumn as Column<string>),
-      title: "Active",
+      title: "Name",
     },
     {
       ...keyColumn("description", textColumn as Column<string>),
       title: "Description",
     },
-
-    {
-      title: "category image",
-      component: ({ rowData, setRowData, active }) => {
-        const [image, setImage] = useState(rowData.image);
-
-        return (
-          <button className="relative">
-            <Avatar alt={rowData.name} src={image} />
-            {active && (
-              <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-                <input
-                  type="file"
-                  className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={(e: any) => {
-                    const file = e.target.files[0];
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                      setImage(reader.result as string);
-                      setRowData({
-                        ...rowData,
-                        image: reader.result as string,
-                      });
-                    };
-                    reader.readAsDataURL(file);
-
-                    e.target.value = "";
-                  }}
-                />
-                <span className="text-white">Change</span>
-              </div>
-            )}
-          </button>
-        );
-      },
-    },
+    // other columns here ...
   ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Categories</h1>
-      <DataSheetGrid
-        value={data}
-        onChange={(change) => setData(change)}
-        columns={columns}
-      />
+      <h1 className="text-2xl font-bold mb-4">Menus</h1>
+      <DataSheetGrid value={data} onChange={handleChange} columns={columns} />
     </div>
   );
 }

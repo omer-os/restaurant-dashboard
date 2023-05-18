@@ -26,9 +26,17 @@ const style = cva(`relative overflow-hidden`, {
 interface Props extends VariantProps<typeof style> {
   src: string;
   alt: string;
+  className?: string;
 }
 
-export default function Avatar({ rounded, src, alt, size, ...props }: Props) {
+export default function Avatar({
+  rounded,
+  src,
+  alt,
+  size,
+  className,
+  ...props
+}: Props) {
   return (
     <div
       className={style({
@@ -38,7 +46,7 @@ export default function Avatar({ rounded, src, alt, size, ...props }: Props) {
     >
       <Image
         src={src || "https://placehold.co/100x100"}
-        className="w-full h-full object-cover"
+        className={"w-full h-full object-cover" + className}
         fill
         alt={alt || "Avatar"}
       />

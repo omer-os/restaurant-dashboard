@@ -11,7 +11,7 @@ const button = cva(
         secondary: "bg-white text-black active:text-white active:bg-black",
         ghost: "bg-zinc-200 hover:bg-zinc-300",
         borderedSecondary:
-          "border border-black active:bg-black active:text-white",
+          "border border-black active:bg-black active:text-white hover:bg-black/10",
         borderedPrimary:
           "border border-white bg-black active:text-white text-white ",
       },
@@ -28,6 +28,7 @@ const button = cva(
 
       width: {
         full: "w-full",
+        max: "w-max",
       },
     },
     defaultVariants: {

@@ -7,6 +7,7 @@ import "react-datasheet-grid/dist/style.css";
 import { useAuth } from "@clerk/nextjs";
 import app from "@lib/firebase";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
+import { getRestaurantByOwnerId } from "@lib/firebaseFunctions/getResturant";
 
 export default function MainLayout({
   children,
@@ -26,16 +27,10 @@ export default function MainLayout({
     const sginInWithClerck = async () => {
       const auth = getAuth(app);
       const token = await getToken({ template: "integration_firebase" });
-      const userCredentials = await signInWithCustomToken(auth, token as string);
-
-      // const { uid, displayName, email, photoURL, phoneNumber } =
-      //   userCredentials.user;
-
-      /**
-       * The userCredentials.user object will call the methods of
-       * the Firebase platform as an authenticated user.
-       */
-      // console.log("user ::", userCredentials.user);
+      const userCredentials = await signInWithCustomToken(
+        auth,
+        token as string
+      );
     };
 
     sginInWithClerck();
@@ -51,8 +46,41 @@ export default function MainLayout({
 
       <div className="flex flex-col w-full">
         <MainNav isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <main className="flex-grow p-6">{children}</main>
+        <RestaurantProvider>
+          <main className="flex-grow p-6">{children}</main>
+        </RestaurantProvider>
       </div>
     </div>
   );
 }
+
+export const RestaurantContext = React.createContext<{
+  restarant: Restaurant;
+  setRestaurant: any;
+}>({
+  restarant: {} as Restaurant,
+  setRestaurant: () => {},
+});
+
+const RestaurantProvider = ({ children }: { children: React.ReactNode }) => {
+  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+  const user = useAuth();
+  useEffect(() => {
+    const fetchData = async () => {
+      const restaurant = await getRestaurantByOwnerId(user.userId as string);
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <RestaurantContext.Provider
+      value={{
+        restarant: restaurant as Restaurant,
+        setRestaurant: setRestaurant,
+      }}
+    >
+      {children}
+    </RestaurantContext.Provider>
+  );
+};

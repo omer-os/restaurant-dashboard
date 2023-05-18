@@ -1,5 +1,6 @@
 type Restaurant = {
   logo: string;
+  description?: string;
   id?: string;
   ownerId: string;
   name: string;
@@ -25,7 +26,7 @@ type Menu = {
   description: string;
   createdAt: Date;
   updatedAt: Date;
-};  
+};
 
 type MenuItem = {
   menuId: string;

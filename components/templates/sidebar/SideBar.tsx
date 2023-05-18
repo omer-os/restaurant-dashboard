@@ -18,7 +18,7 @@ export default function SideBar({
   return (
     <>
       <div
-        className={`fixed z-20 inset-0 bg-black opacity-50 transition-opacity lg:hidden ${
+        className={`fixed z-40 inset-0 bg-black opacity-50 transition-opacity lg:hidden ${
           isSidebarOpen ? "block" : "hidden"
         }`}
         aria-hidden="true"
@@ -26,16 +26,14 @@ export default function SideBar({
       ></div>
 
       <div
-        className={`fixed z-30 inset-y-0 left-0 w-64 overflow-auto transition-all transform duration-500 ease-in-out ${
+        className={`fixed z-40 inset-y-0 left-0 w-64 overflow-auto transition-all transform duration-500 ease-in-out  ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 lg:static lg:inset-0`}
       >
         <div className="bg-white h-full flex flex-col p-4">
           {/* Content for Sidebar */}
 
-         
-
-          <div className="flex flex-col items-center text-center">
+          {/* <div className="flex flex-col items-center text-center">
             <Avatar
               size={"xl"}
               alt="s"
@@ -49,14 +47,11 @@ export default function SideBar({
               consectetur dolor molestiae quis minus sunt sint est expedita
               reprehenderit suscipit voluptates molestias obcaecati!
             </div>
-          </div>
-
-
-
-
+          </div> */}
+          {/* 
           <div className="my-4">
             <Divider />
-          </div>
+          </div> */}
 
           <ul className="flex flex-col gap-2">
             {[

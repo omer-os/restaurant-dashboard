@@ -1,11 +1,13 @@
-import CategoriesTable from "@components/blocks/tables/CategoriesTable";
+import MenusList from "@components/blocks/editComponents/MenusList";
 import MenuItemsTable from "@components/blocks/tables/MenuItemsTable";
+import { auth } from "@lib/firebase";
 
-export default function page() {
+export default async function page() {
+
   return (
-    <div className="p-5 bg-white shadow-lg rounded border border-zinc-200 min-h-[20em]">
-      <CategoriesTable />
-
+    <div className="lg:p-5 rounded border min-h-[20em]">
+      {/* <CategoriesTable /> */}
+      <MenusList />
       <MenuItemsTable />
     </div>
   );

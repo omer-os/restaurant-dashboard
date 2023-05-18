@@ -11,32 +11,25 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   setState,
   ImageComponent,
 }) => {
-  const [localSrc, setLocalSrc] = useState(State);
+  const [file, setFile] = useState(""); // Handles input change event and updates state
 
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files && event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setLocalSrc(reader.result as string);
-
-        setState(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
+  function handleChange(event: any) {
+    setState(event.target.files[0]);
+  }
   return (
     <div className="relative">
-      <button onClick={() => document.getElementById("fileInput")?.click()}>
+      <button
+        type="button"
+        onClick={() => document.getElementById("fileInput")?.click()}
+      >
         {ImageComponent}
       </button>
       <input
         id="fileInput"
         type="file"
-        onChange={handleImageChange}
+        onChange={handleChange}
         className="hidden"
-        accept="image/*"
+        accept="image/png"
       />
     </div>
   );

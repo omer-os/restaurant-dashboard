@@ -1,49 +1,34 @@
 import { db } from "@lib/firebase";
 
-export const getRestaurant = async (ownerId: string) => {
-  const restaurantRef = db.collection('restaurants').where('ownerId', '==', ownerId);
-  const snapshot = await restaurantRef.get();
+export const getRestaurantByOwnerId = async (ownerId: string) => {
+  const querySnapshot = await db
+    .collection("restaurants")
+    .where("ownerId", "==", ownerId)
+    .get();
 
-  if (snapshot.empty) {
-    console.log('No matching restaurant.');
-    return null;
-  }
+  if (!querySnapshot.empty) {
+    let restaurant = null;
 
-  let restaurant;
-  snapshot.forEach(doc => {
-    console.log(doc.id, '=>', doc.data());
-    restaurant = doc.data();
-  });
+    querySnapshot.forEach((doc) => {
+      restaurant = { id: doc.id, ...doc.data() };
+    });
 
-  return restaurant;
+    return restaurant;
+  } 
+  // else {
+  //   throw new Error("No restaurant found for this user!");
+  // }
 };
 
-export const updateRestaurant = async (ownerId: string, updatedData:Restaurant) => {
-  const restaurantRef = db.collection('restaurants').where('ownerId', '==', ownerId);
-  const snapshot = await restaurantRef.get();
-
-  if (snapshot.empty) {
-    console.log('No matching restaurant.');
-    return;
-  }
-
-  let docId;
-  snapshot.forEach(doc => {
-    console.log(doc.id, '=>', doc.data());
-    docId = doc.id;
-  });
-
-  await db.collection('restaurants').doc(docId).update(updatedData);
-};
-
-export const addRestaurant = async (newRestaurant:Restaurant) => {
-  const restaurantRef = db.collection('restaurants').where('ownerId', '==', newRestaurant.ownerId);
-  const snapshot = await restaurantRef.get();
-
-  if (!snapshot.empty) {
-    console.log('Restaurant with this ownerId already exists.');
-    return;
-  }
-
-  await db.collection('restaurants').add(newRestaurant);
+export const updateRestaurantInfo = async (
+  ownerId: string,
+  updatedInfo: Partial<Restaurant>
+): Promise<void> => {
+  const restaurant: any = await getRestaurantByOwnerId(ownerId);
+  if (restaurant && restaurant.id) {
+    await db.collection("restaurants").doc(restaurant.id).update(updatedInfo);
+  } 
+  // else {
+  //   throw new Error("No restaurant found for this user!");
+  // }
 };
