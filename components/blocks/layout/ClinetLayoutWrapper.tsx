@@ -15,7 +15,7 @@ export default function ClientLayoutWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const [openSideBar, setOpenSideBar] = useState(true);
+  const [openSideBar, setOpenSideBar] = useState(false);
 
   return (
     <ClientWrapperContext.Provider

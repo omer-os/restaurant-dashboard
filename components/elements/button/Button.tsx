@@ -1,13 +1,15 @@
 import { VariantProps, cva } from "class-variance-authority";
 
 export const ButtonStyles = cva(
-  "active:scale-95 transition-all flex items-center gap-2",
+  "active:scale-95 flex items-center gap-2 transition-all",
   {
     variants: {
       bg: {
         primary: "bg-yellow-400 hover:bg-yellow-500",
         zinc: "bg-zinc-200 hover:bg-zinc-300",
         white: "bg-white hover:bg-gray-100",
+        blue: "bg-blue-600/30 hover:bg-blue-500/60 border-2 border-blue-600",
+        red: "bg-red-600 hover:bg-red-500 text-white",
       },
 
       rounded: {
