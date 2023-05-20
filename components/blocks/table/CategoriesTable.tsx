@@ -1,12 +1,10 @@
 "use client";
 
-import { FiEdit2, FiSearch, FiTrash2 } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import TextInput from "@components/elements/input/TextInput";
 import { useState } from "react";
 import CategoryTableItem from "./CategoryTableItem";
-// import CategoryModal from "../modal/CategoryModal";
 import dynamic from "next/dynamic";
-import { AnimatePresence } from "framer-motion";
 import CategoryModal from "../modal/CategoryModal";
 
 const data = [
