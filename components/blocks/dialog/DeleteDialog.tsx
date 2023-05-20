@@ -5,8 +5,8 @@ import Button from "@components/elements/button/Button";
 
 interface DeleteDialogProps {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onDelete: () => void;
+  setOpen: any;
+  onDelete: any;
   title: string;
   description: string;
 }
@@ -18,15 +18,6 @@ export default function DeleteDialog({
   title,
   description,
 }: DeleteDialogProps) {
-  const handleDelete = () => {
-    onDelete();
-    setOpen(false);
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-  };
-
   return (
     <AnimatePresence>
       {open && (
@@ -50,10 +41,16 @@ export default function DeleteDialog({
               <h2 className="text-2xl font-bold mb-4">{title}</h2>
               <p className="mb-8">{description}</p>
               <div className="flex justify-end space-x-4">
-                <Button bg="red" onClick={handleDelete}>
+                <Button
+                  bg="red"
+                  onClick={() => {
+                    onDelete();
+                    setOpen(false);
+                  }}
+                >
                   Delete
                 </Button>
-                <Button bg={"blue"} onClick={handleCancel}>
+                <Button bg={"blue"} onClick={() => setOpen(false)}>
                   Cancel
                 </Button>
               </div>
