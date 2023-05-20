@@ -4,6 +4,11 @@ import { FiEdit2, FiSearch, FiTrash2 } from "react-icons/fi";
 import TextInput from "@components/elements/input/TextInput";
 import { useState } from "react";
 import CategoryTableItem from "./CategoryTableItem";
+// import CategoryModal from "../modal/CategoryModal";
+import dynamic from "next/dynamic";
+import { AnimatePresence } from "framer-motion";
+import CategoryModal from "../modal/CategoryModal";
+
 const data = [
   {
     id: "1",
@@ -11,7 +16,7 @@ const data = [
     description: "Classic Italian pasta dish with creamy sauce and bacon",
     createdAt: new Date(),
     updatedAt: new Date(),
-    image: "https://example.com/images/pasta-carbonara.jpg",
+    image: "https://placehold.co/300x300",
   },
   {
     id: "2",
@@ -19,7 +24,7 @@ const data = [
     description: "Traditional Italian pizza with tomato, mozzarella, and basil",
     createdAt: new Date(),
     updatedAt: new Date(),
-    image: "https://example.com/images/margherita-pizza.jpg",
+    image: "https://placehold.co/300x300",
   },
   {
     id: "3",
@@ -28,7 +33,7 @@ const data = [
       "Indian curry dish with grilled chicken in creamy tomato sauce",
     createdAt: new Date(),
     updatedAt: new Date(),
-    image: "https://example.com/images/chicken-tikka-masala.jpg",
+    image: "https://placehold.co/300x300",
   },
   {
     id: "4",
@@ -36,7 +41,7 @@ const data = [
     description: "Japanese dish with vinegared rice and various fillings",
     createdAt: new Date(),
     updatedAt: new Date(),
-    image: "https://example.com/images/sushi-rolls.jpg",
+    image: "https://placehold.co/300x300",
   },
   {
     id: "5",
@@ -45,7 +50,7 @@ const data = [
       "Classic salad with romaine lettuce, croutons, and Caesar dressing",
     createdAt: new Date(),
     updatedAt: new Date(),
-    image: "https://example.com/images/caesar-salad.jpg",
+    image: "https://placehold.co/300x300",
   },
   {
     id: "6",
@@ -53,7 +58,7 @@ const data = [
     description: "Juicy beef patty with cheese, lettuce, and tomato in a bun",
     createdAt: new Date(),
     updatedAt: new Date(),
-    image: "https://example.com/images/beef-burger.jpg",
+    image: "https://placehold.co/300x300",
   },
   {
     id: "7",
@@ -61,7 +66,7 @@ const data = [
     description: "Thai stir-fried noodles with shrimp, tofu, peanuts, and lime",
     createdAt: new Date(),
     updatedAt: new Date(),
-    image: "https://example.com/images/pad-thai.jpg",
+    image: "https://placehold.co/300x300",
   },
   {
     id: "8",
@@ -69,7 +74,7 @@ const data = [
     description: "British dish with battered fish and fried potato chips",
     createdAt: new Date(),
     updatedAt: new Date(),
-    image: "https://example.com/images/fish-and-chips.jpg",
+    image: "https://placehold.co/300x300",
   },
   {
     id: "9",
@@ -78,7 +83,7 @@ const data = [
       "Middle Eastern wrap with grilled chicken, vegetables, and sauce",
     createdAt: new Date(),
     updatedAt: new Date(),
-    image: "https://example.com/images/chicken-shawarma.jpg",
+    image: "https://placehold.co/300x300",
   },
   {
     id: "10",
@@ -86,13 +91,24 @@ const data = [
     description: "Creamy Italian rice dish with mushrooms and Parmesan cheese",
     createdAt: new Date(),
     updatedAt: new Date(),
-    image: "https://example.com/images/mushroom-risotto.jpg",
+    image: "https://placehold.co/300x300",
   },
 ];
+
+const DeleteDialog = dynamic(() => import("../dialog/DeleteDialog"), {
+  loading: () => <p>Loading...</p>,
+});
 
 export default function CategoriesTable() {
   const [Categories, setCategories] = useState(data);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [OpenModal, setOpenModal] = useState(false);
+  const [OpenDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState<
+    (typeof Categories)[number] | null
+  >(null);
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
@@ -103,6 +119,7 @@ export default function CategoriesTable() {
   });
 
   const tableHeadings = [
+    "Image",
     "Name",
     "Description",
     "Created At",
@@ -110,9 +127,23 @@ export default function CategoriesTable() {
     "Actions",
   ];
 
+  const handleDelete = () => {
+    if (currentCategory) {
+      setCategories((prev) =>
+        prev.filter((item) => item.id !== currentCategory.id)
+      );
+    }
+  };
+
+  const [categoryName, setCategoryName] = useState("");
+  const [categoryDescription, setCategoryDescription] = useState("");
+  const [categoryImage, setCategoryImage] = useState("");
+
   return (
     <div className="overflow-x-auto overflow-y-scroll max-h-[70vh]">
-      <div className="mb-3">
+      <div className="text-3xl font-bold">All Categories</div>
+
+      <div className="mb-3 mt-6">
         <TextInput
           startIcon={<FiSearch />}
           State={searchTerm}
@@ -136,15 +167,82 @@ export default function CategoriesTable() {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {filteredData.map((item) => (
+          {filteredData.map((item, index) => (
             <CategoryTableItem
-              key={item.id}
+              setCurrentCategory={setCurrentCategory}
+              setOpenDeleteDialog={setOpenDeleteDialog}
+              key={item.id + index}
               item={item}
               setCategories={setCategories}
+              onEdit={() => {
+                setCurrentCategory(item);
+                setCategoryName(item.name);
+                setCategoryDescription(item.description);
+                setCategoryImage(item.image);
+                setOpenModal(true);
+              }}
+              onDelete={() => {
+                setCurrentCategory(item);
+                setOpenDeleteDialog(true);
+              }}
             />
           ))}
         </tbody>
       </table>
+      <CategoryModal
+        categoryName={categoryName}
+        setCategoryName={setCategoryName}
+        categoryDescription={categoryDescription}
+        setCategoryDescription={setCategoryDescription}
+        categoryImage={categoryImage}
+        setCategoryImage={setCategoryImage}
+        onSave={() => {
+          if (currentCategory) {
+            setCategories((prev) =>
+              prev.map((item) =>
+                item.id === currentCategory.id
+                  ? {
+                      ...item,
+                      name: categoryName,
+                      description: categoryDescription,
+                      image: categoryImage,
+                    }
+                  : item
+              )
+            );
+          } else {
+            setCategories((prev) => [
+              ...prev,
+              {
+                id: Math.random().toString(),
+                name: categoryName,
+                description: categoryDescription,
+                image: categoryImage,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              },
+            ]);
+          }
+        }}
+        open={OpenModal}
+        setOpen={(isOpen) => {
+          if (!isOpen) {
+            setCurrentCategory(null);
+          }
+          setOpenModal(isOpen);
+        }}
+      />
+
+      <DeleteDialog
+        description="Are you sure you want to delete this category?"
+        onDelete={handleDelete}
+        open={OpenDeleteDialog}
+        setOpen={(isOpen: boolean) => {
+          if (!isOpen) setCurrentCategory(null);
+          setOpenDeleteDialog(isOpen);
+        }}
+        title={`Delete ${currentCategory ? currentCategory.name : ""}`}
+      />
     </div>
   );
 }

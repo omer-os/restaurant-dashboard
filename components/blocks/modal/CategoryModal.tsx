@@ -71,24 +71,22 @@ const CategoryModal = ({
       {open && (
         <>
           <motion.div
-            key={categoryName}
             className="overlay bg-black/40 inset-0 fixed z-50"
             initial="initial"
             animate="animate"
             exit="exit"
             variants={overlayVariants}
             onClick={handleCloseModal}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.2 }}
           ></motion.div>
 
           <motion.div
-            key={categoryDescription}
             className="fixed bg-white shadow-xl md:rounded-l-3xl md:rounded-t-none rounded-t-3xl rounded-l-none md:h-full h-[75vh] md:w-[50vw] w-full bottom-0 md:top-0 right-0 md:left-auto overflow-y-scroll z-50"
             initial="initial"
             animate="animate"
             exit="exit"
             variants={modalVariants}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.2 }}
           >
             <div className="flex justify-between items-center bg-white sticky top-0 left-0 px-5 py-3 z-10">
               <div className="text-3xl font-bold">{categoryName}</div>

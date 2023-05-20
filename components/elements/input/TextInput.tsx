@@ -51,12 +51,17 @@ export default function TextInput({
 }: TextInputProps) {
   const styles = inputStyles({ bg, className, padding, width });
   return (
-    <div className="relative flex flex-col fill-current gap-1">
-      <div className="text-sm text-zinc-500">{label}</div>
-
-      <div className="absolute top-0 left-0 flex items-center h-full ml-2">
-        {startIcon}
-      </div>
+    <div
+      className={`relative fill-current
+    ${label ? `gap-1 flex flex-col` : ``}
+    `}
+    >
+      {label && <div className="text-sm text-zinc-500">{label}</div>}
+      {startIcon && (
+        <div className="absolute top-0 left-0 flex items-center h-full ml-2">
+          {startIcon}
+        </div>
+      )}
       <input
         type="text"
         placeholder={placeholder}
@@ -66,10 +71,11 @@ export default function TextInput({
           styles + ` ${startIcon ? `pl-8` : ``} ${endIcon ? `pr-8` : ``}`
         }
       />
-
-      <div className="absolute top-0 right-0 flex items-center h-full mr-2">
-        {endIcon}
-      </div>
+      {endIcon && (
+        <div className="absolute top-0 right-0 flex items-center h-full mr-2">
+          {endIcon}
+        </div>
+      )}
     </div>
   );
 }
