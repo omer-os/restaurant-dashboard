@@ -1,9 +1,7 @@
-import { getStorage, ref, uploadBytes } from "firebase/storage";
-import firebase from "firebase/compat/app";
-import "firebase/compat/firestore";
-import "firebase/compat/auth";
-import "firebase/compat/storage";
+import { getApp, initializeApp, getApps } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { useAuth } from "@clerk/nextjs";
 
 const config = {
   apiKey: "AIzaSyAVZkkclCZfSNjxg07fHsiMelxcRg0xWms",
@@ -14,29 +12,9 @@ const config = {
   appId: "1:1086961901693:web:e63942bff81fd65e691114",
 };
 
-const app = firebase.initializeApp(config);
-export const db = firebase.firestore();
-export const storage = firebase.storage();
+const app = !getApps().length ? initializeApp(config) : getApp();
+
+export const db = getFirestore(app);
 export const auth = getAuth(app);
-
-
-
-
-
-export async function uploadFile(path: string, file: File | Blob) {
-  const storage = getStorage(app);
-  const storageRef = ref(storage, path);
-
-  // 'uploadBytes' function returns a promise that resolves with an UploadResult
-  try {
-    const result = await uploadBytes(storageRef, file);
-    console.log('Uploaded file:', result);
-  } catch (error) {
-    console.error('Error uploading file:', error);
-  }
-}
-
-
-
 
 export default app;

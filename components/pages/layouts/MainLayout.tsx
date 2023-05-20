@@ -1,85 +1,28 @@
 "use client";
-import MainNav from "@components/templates/nav/MainNav";
-import SideBar from "@components/templates/sidebar/SideBar";
-import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import "react-datasheet-grid/dist/style.css";
-import { useAuth } from "@clerk/nextjs";
-import app, { auth } from "@lib/firebase";
-import { getRestaurantByOwnerId } from "@lib/firebaseFunctions/getResturant";
-import { getAuth, signInWithCustomToken } from "firebase/auth";
+import { useState } from "react";
+import SideBar from "./SideBar";
+import TopNav from "./TopNav";
 
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const pathname = usePathname();
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
-
-  const { getToken } = useAuth();
-
-  useEffect(() => {
-    const sginInWithClerck = async () => {
-      const token = await getToken({ template: "integration_firebase" });
-      const userCredentials = await signInWithCustomToken(
-        auth,
-        token as string
-      );
-    };
-
-    sginInWithClerck();
-  }, []);
-
+  const [error, setError] = useState(null);
+  const [sidebaseOpen, setSidebaseOpen] = useState(false);
   return (
-    <div className="flex h-screen bg-gray-100">
-      <SideBar
-        pathname={pathname}
-        isSidebarOpen={isSidebarOpen}
-        toggleSidebar={toggleSidebar}
-      />
+    <div>
+      <div className="h-screen flex">
+        <SideBar isOpen={sidebaseOpen} setIsOpen={setSidebaseOpen} />
 
-      <div className="flex flex-col w-full">
-        <MainNav isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <RestaurantProvider>
-          <main className="flex-grow p-6">{children}</main>
-        </RestaurantProvider>
+        <main className="flex-1 min-w-0 overflow-auto flex flex-col">
+          <TopNav
+            sidebaseOpen={sidebaseOpen}
+            setSidebaseOpen={setSidebaseOpen}
+          />
+          <div className="p-5">{children}</div>
+        </main>
       </div>
     </div>
   );
 }
-
-export const RestaurantContext = React.createContext<{
-  restarant: Restaurant;
-  setRestaurant: any;
-}>({
-  restarant: {} as Restaurant,
-  setRestaurant: () => {},
-});
-
-const RestaurantProvider = ({ children }: { children: React.ReactNode }) => {
-  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-  const user = useAuth();
-  useEffect(() => {
-    const fetchData = async () => {
-      const restaurant = await getRestaurantByOwnerId(user.userId as string);
-    };
-
-    fetchData();
-  }, []);
-
-  return (
-    <RestaurantContext.Provider
-      value={{
-        restarant: restaurant as Restaurant,
-        setRestaurant: setRestaurant,
-      }}
-    >
-      {children}
-    </RestaurantContext.Provider>
-  );
-};

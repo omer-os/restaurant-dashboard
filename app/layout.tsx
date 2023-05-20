@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import "styles/globals.css";
 import { Cairo } from "next/font/google";
-import MainLayout from "@components/pages/layouts/MainLayout";
 import { ClerkProvider } from "@clerk/nextjs/app-beta";
+import MainLayout from "@components/pages/layouts/MainLayout";
 
 const cairo = Cairo({
   variable: "--cairo",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: "Restaurant Dashboard - Next.js",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={cairo.className}>
+        <body className={cairo.className + " bg-zinc-200"}>
           <MainLayout>{children}</MainLayout>
         </body>
       </html>
