@@ -18,7 +18,7 @@ export default function MainNavBar() {
           bg={"white"}
           IconButton={true}
           onClick={() => setOpenSideBar(!openSideBar)}
-          className="relative z-50"
+          className="relative z-50 md:hidden"
         >
           {openSideBar ? <IoMdClose size={15} /> : <FiMenu size={15} />}
         </Button>
