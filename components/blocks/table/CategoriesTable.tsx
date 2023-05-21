@@ -4,8 +4,8 @@ import { FiSearch } from "react-icons/fi";
 import TextInput from "@components/elements/input/TextInput";
 import { useState } from "react";
 import CategoryTableItem from "./CategoryTableItem";
-import dynamic from "next/dynamic";
 import CategoryModal from "../modal/CategoryModal";
+import DeleteDialog from "../dialog/DeleteDialog";
 
 const data = [
   {
@@ -92,10 +92,6 @@ const data = [
     image: "https://placehold.co/300x300",
   },
 ];
-
-const DeleteDialog = dynamic(() => import("../dialog/DeleteDialog"), {
-  loading: () => <p>Loading...</p>,
-});
 
 export default function CategoriesTable() {
   const [Categories, setCategories] = useState(data);
