@@ -1,9 +1,10 @@
+import MenuItemsTable from "@components/blocks/table/MenuItemsTable";
 import React from "react";
 
 export default function page() {
   return (
-    <div className="p-5">
-      <h1>menu item is here</h1>
+    <div className="p-4 bg-white">
+      <MenuItemsTable />
     </div>
   );
 }

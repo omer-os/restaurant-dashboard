@@ -1,14 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
-import { FcViewDetails } from "react-icons/fc";
-import Link from "next/link";
+import { Price } from "../dialog/PricesTable";
 
-export default function CategoryTableItem({
-  item,
-  onEdit,
-  onDelete,
-}: {
+type MenuItemProps = {
   item: {
     id: string;
     name: string;
@@ -16,14 +11,13 @@ export default function CategoryTableItem({
     createdAt: Date;
     updatedAt: Date;
     image: string;
+    prices: Price[];
   };
-  setCategories: any;
-  onEdit: any;
-  onDelete: any;
+  onEdit: () => void;
+  onDelete: () => void;
+};
 
-  setCurrentCategory: any;
-  setOpenDeleteDialog: any;
-}) {
+const MenuItem: React.FC<MenuItemProps> = ({ item, onEdit, onDelete }) => {
   return (
     <tr>
       <td className="px-6 py-4 whitespace-nowrap">
@@ -44,9 +38,7 @@ export default function CategoryTableItem({
       <td className="px-6 py-4 whitespace-nowrap">
         {item.createdAt.toLocaleDateString()}
       </td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        {item.updatedAt.toLocaleDateString()}
-      </td>
+
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-start">
         <button
           className="text-blue-600 hover:text-blue-900 mr-2 hover:bg-blue-200 rounded-full p-2 hover:ring-1 ring-blue-600"
@@ -60,16 +52,9 @@ export default function CategoryTableItem({
         >
           <FiTrash2 />
         </button>
-
-        <Link
-          href={`/menu/${item.id}`}
-          className="text-blue-600 hover:text-blue-900 mr-2 hover:bg-blue-200 rounded-full p-2 hover:ring-1 ring-blue-600"
-        >
-          <FcViewDetails />
-        </Link>
       </td>
-
-      {/* Modal */}
     </tr>
   );
-}
+};
+
+export default MenuItem;
