@@ -1,5 +1,4 @@
 import CategoriesTable from "@components/blocks/table/CategoriesTable";
-import React from "react";
 
 export default function page() {
   return (

@@ -6,6 +6,7 @@ import { useState } from "react";
 import CategoryTableItem from "./CategoryTableItem";
 import CategoryModal from "../modal/CategoryModal";
 import DeleteDialog from "../dialog/DeleteDialog";
+import DropDown from "@components/elements/dropdown/DropDown";
 
 const data = [
   {
@@ -103,10 +104,6 @@ export default function CategoriesTable() {
     (typeof Categories)[number] | null
   >(null);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-
   const filteredData = Categories.filter((item) => {
     // Adjust this depending on what properties you want to search by
     return item.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -133,18 +130,28 @@ export default function CategoriesTable() {
   const [categoryDescription, setCategoryDescription] = useState("");
   const [categoryImage, setCategoryImage] = useState("");
 
+  const [FilteredBy, setFilteredBy] = useState<
+    null | "name" | "description" | "price"
+  >(null);
+
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
   return (
     <div className="overflow-x-auto overflow-y-scroll max-h-[70vh]">
-      <div className="text-3xl font-bold">All Categories</div>
+      <div className="sticky left-0 flex gap-3">
+        <div>
+          <div className="text-3xl font-bold">All Categories</div>
 
-      <div className="mb-3 mt-6">
-        <TextInput
-          startIcon={<FiSearch />}
-          State={searchTerm}
-          setState={setSearchTerm}
-          placeholder="Search for menus..."
-          className="md:max-w-[300px]"
-        />
+          <div className="mb-3 mt-6">
+            <TextInput
+              startIcon={<FiSearch />}
+              State={searchTerm}
+              setState={setSearchTerm}
+              placeholder="Search for menus..."
+              className="md:max-w-[300px]"
+            />
+          </div>
+        </div>
       </div>
 
       <table className="w-full divide-y divide-gray-200">
