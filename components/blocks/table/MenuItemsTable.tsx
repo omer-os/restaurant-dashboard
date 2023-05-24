@@ -1,14 +1,33 @@
 "use client";
 
-import { FiSearch } from "react-icons/fi";
-import TextInput from "@components/elements/input/TextInput";
 import { useState } from "react";
+import { FiSearch, FiPlus } from "react-icons/fi";
+import TextInput from "@components/elements/input/TextInput";
 import DeleteDialog from "../dialog/DeleteDialog";
 import MenuItem from "./MenuItem";
 import MenuItemModal from "../modal/MenuItemModal";
-import { Price } from "../dialog/PricesTable";
+import Button from "@components/elements/button/Button";
+import DialogBox from "../dialog/DialogBox";
+import UploadImageWrapper from "@components/elements/imageoperations/UploadImageComponent";
 
-const menuItems = [
+interface MenuItem {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  createdAt: Date;
+  updatedAt: Date;
+  prices: { name: string; value: string }[];
+}
+
+const tableHeadings: string[] = [
+  "Image",
+  "Name",
+  "Description",
+  "Created At",
+  "Actions",
+];
+const mI: MenuItem[] = [
   {
     id: "1",
     name: "Pasta Carbonara",
@@ -248,18 +267,14 @@ const menuItems = [
   },
 ];
 
-const tableHeadings = ["Image", "Name", "Description", "Created At", "Actions"];
+export default function MenuItemsTable(): JSX.Element {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
+  const [currentMenuItem, setCurrentMenuItem] = useState<MenuItem | null>(null);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(mI);
 
-export default function MenuItemsTable() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [MenuItems, setMenuItems] = useState(menuItems);
-  const [OpenModal, setOpenModal] = useState(false);
-  const [OpenDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [currentMenuItem, setCurrentMenuItem] = useState<
-    (typeof MenuItems)[number] | null
-  >(null);
-
-  const filteredData = MenuItems.filter((item) => {
+  const filteredData: MenuItem[] = menuItems.filter((item) => {
     return item.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
@@ -271,10 +286,51 @@ export default function MenuItemsTable() {
     }
   };
 
-  const [menuItemName, setMenuItemName] = useState("");
-  const [menuItemDescription, setMenuItemDescription] = useState("");
-  const [menuItemImage, setMenuItemImage] = useState("");
-  const [menuItemPrices, setMenuItemPrices] = useState<Price[]>([]);
+  const [menuItemName, setMenuItemName] = useState<string>("");
+  const [menuItemDescription, setMenuItemDescription] = useState<string>("");
+  const [menuItemImage, setMenuItemImage] = useState<string>("");
+  const [menuItemPrices, setMenuItemPrices] = useState<
+    { name: string; value: string }[]
+  >([]);
+
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [imageDownloadURL, setImageDownloadURL] = useState<string | null>("");
+
+  const handleAddNewItem = () => {
+    setOpenDialog(true);
+  };
+
+  const handleSaveItem = () => {
+    if (currentMenuItem) {
+      setMenuItems((prev) =>
+        prev.map((item) =>
+          item.id === currentMenuItem.id
+            ? {
+                ...item,
+                name: menuItemName,
+                description: menuItemDescription,
+                image: menuItemImage,
+                prices: menuItemPrices,
+              }
+            : item
+        )
+      );
+    } else {
+      setMenuItems((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(),
+          name: menuItemName,
+          description: menuItemDescription,
+          image: menuItemImage,
+          prices: menuItemPrices,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+    setOpenModal(false);
+  };
 
   return (
     <div className="overflow-x-auto overflow-y-scroll max-h-[70vh]">
@@ -335,55 +391,65 @@ export default function MenuItemsTable() {
         setMenuItemImage={setMenuItemImage}
         menuItemPrices={menuItemPrices}
         setMenuItemPrices={setMenuItemPrices}
-        onSave={() => {
-          if (currentMenuItem) {
-            setMenuItems((prev) =>
-              prev.map((item) =>
-                item.id === currentMenuItem.id
-                  ? {
-                      ...item,
-                      name: menuItemName,
-                      description: menuItemDescription,
-                      image: menuItemImage,
-                      prices: menuItemPrices,
-                    }
-                  : item
-              )
-            );
-          } else {
-            setMenuItems((prev) => [
-              ...prev,
-              {
-                id: Math.random().toString(),
-                name: menuItemName,
-                description: menuItemDescription,
-                image: menuItemImage,
-                prices: menuItemPrices,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-              },
-            ]);
-          }
-        }}
-        open={OpenModal}
-        setOpen={(isOpen) => {
-          if (!isOpen) {
-            setCurrentMenuItem(null);
-          }
-          setOpenModal(isOpen);
-        }}
+        onSave={handleSaveItem}
+        open={openModal}
+        setOpen={setOpenModal}
       />
 
       <DeleteDialog
         description="Are you sure you want to delete this menu item?"
         onDelete={handleDelete}
-        open={OpenDeleteDialog}
+        open={openDeleteDialog}
         setOpen={(isOpen: boolean) => {
           if (!isOpen) setCurrentMenuItem(null);
           setOpenDeleteDialog(isOpen);
         }}
         title={`Delete ${currentMenuItem ? currentMenuItem.name : ""}`}
       />
+
+      <DialogBox open={openDialog} setOpen={setOpenDialog}>
+        <div className="bg-white rounded p-4 shadow-lg flex flex-col sm:w-[30em] w-[20em]">
+          <div className="text-2xl font-bold mb-4">Create New Menu Item</div>
+
+          <div className="flex flex-col gap-3">
+            <UploadImageWrapper setImageUrl={setImageDownloadURL}>
+              <div className="w-full rounded h-[15em] bg-zinc-300 mx-auto">
+                {imageDownloadURL && (
+                  <img
+                    className="w-full h-full object-cover rounded"
+                    src={imageDownloadURL}
+                    alt=""
+                  />
+                )}
+              </div>
+            </UploadImageWrapper>
+
+            <TextInput
+              label="Name"
+              State={menuItemName}
+              setState={setMenuItemName}
+              placeholder="Enter the name"
+            />
+
+            <TextInput
+              label="Description"
+              State={menuItemDescription}
+              setState={setMenuItemDescription}
+              placeholder="Enter the description"
+            />
+
+            <Button onClick={handleSaveItem}>Save Item</Button>
+          </div>
+        </div>
+      </DialogBox>
+
+      <Button
+        startIcon={<FiPlus />}
+        onClick={handleAddNewItem}
+        className="mt-4"
+      >
+        Add new item
+      </Button>
     </div>
   );
 }

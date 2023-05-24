@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import OrderItem from "./OrderItem";
 import { Order } from "@interfaces/MainInterface";
+import UploadImage from "@components/elements/imageoperations/UploadImageComponent";
 
 const OrdersTable: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -49,8 +50,10 @@ const OrdersTable: React.FC = () => {
   }, [selectedItems, orders.length]);
 
   const handleDelete = (id: string) => {
-    const updatedOrders = orders.filter((order) => order.id !== id);
-    setOrders(updatedOrders);
+    if (id) {
+      setOrders((prevOrders) => prevOrders.filter((order) => order.id !== id));
+    }
+
     setSelectedItems((prevSelectedItems) =>
       prevSelectedItems.filter((itemId) => itemId !== id)
     );
@@ -124,7 +127,7 @@ const OrdersTable: React.FC = () => {
             <OrderItem
               key={order.id + index}
               order={order}
-              handleDelete={handleDelete}
+              handleDelete={() => handleDelete(order.id)}
               handleEdit={handleEdit}
               handleSelectItem={handleSelectItem}
               isSelected={selectedItems.includes(order.id)}
@@ -141,6 +144,12 @@ const OrdersTable: React.FC = () => {
           Delete Selected
         </button>
       </div>
+
+
+
+
+
+      
     </div>
   );
 };

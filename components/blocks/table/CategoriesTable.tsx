@@ -1,12 +1,15 @@
 "use client";
 
-import { FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch } from "react-icons/fi";
 import TextInput from "@components/elements/input/TextInput";
 import { useState } from "react";
 import CategoryTableItem from "./CategoryTableItem";
 import CategoryModal from "../modal/CategoryModal";
 import DeleteDialog from "../dialog/DeleteDialog";
 import DropDown from "@components/elements/dropdown/DropDown";
+import Button from "@components/elements/button/Button";
+import DialogBox from "../dialog/DialogBox";
+import UploadImageWrapper from "@components/elements/imageoperations/UploadImageComponent";
 
 const data = [
   {
@@ -136,114 +139,178 @@ export default function CategoriesTable() {
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-  return (
-    <div className="overflow-x-auto overflow-y-scroll max-h-[70vh]">
-      <div className="sticky left-0 flex gap-3">
-        <div>
-          <div className="text-3xl font-bold">All Categories</div>
+  const [OpenDialog, setOpenDialog] = useState(false);
+  const [ImageDownloadURL, setImageDownloadURL] = useState<string | null>("");
 
-          <div className="mb-3 mt-6">
-            <TextInput
-              startIcon={<FiSearch />}
-              State={searchTerm}
-              setState={setSearchTerm}
-              placeholder="Search for menus..."
-              className="md:max-w-[300px]"
-            />
+  return (
+    <>
+      <div className="overflow-x-auto overflow-y-scroll max-h-[70vh]">
+        <div className="sticky left-0 flex gap-3">
+          <div>
+            <div className="text-3xl font-bold">All Categories</div>
+
+            <div className="mb-3 mt-6">
+              <TextInput
+                startIcon={<FiSearch />}
+                State={searchTerm}
+                setState={setSearchTerm}
+                placeholder="Search for menus..."
+                className="md:max-w-[300px]"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <table className="w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50 sticky top-0 left-0">
-          <tr>
-            {tableHeadings.map((heading, index) => (
-              <th
-                key={index}
-                className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                {heading}
-              </th>
+        <table className="w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50 sticky top-0 left-0">
+            <tr>
+              {tableHeadings.map((heading, index) => (
+                <th
+                  key={index}
+                  className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  {heading}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {filteredData.map((item, index) => (
+              <CategoryTableItem
+                setCurrentCategory={setCurrentCategory}
+                setOpenDeleteDialog={setOpenDeleteDialog}
+                key={item.id + index}
+                item={item}
+                setCategories={setCategories}
+                onEdit={() => {
+                  setCurrentCategory(item);
+                  setCategoryName(item.name);
+                  setCategoryDescription(item.description);
+                  setCategoryImage(item.image);
+                  setOpenModal(true);
+                }}
+                onDelete={() => {
+                  setCurrentCategory(item);
+                  setOpenDeleteDialog(true);
+                }}
+              />
             ))}
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {filteredData.map((item, index) => (
-            <CategoryTableItem
-              setCurrentCategory={setCurrentCategory}
-              setOpenDeleteDialog={setOpenDeleteDialog}
-              key={item.id + index}
-              item={item}
-              setCategories={setCategories}
-              onEdit={() => {
-                setCurrentCategory(item);
-                setCategoryName(item.name);
-                setCategoryDescription(item.description);
-                setCategoryImage(item.image);
-                setOpenModal(true);
-              }}
-              onDelete={() => {
-                setCurrentCategory(item);
-                setOpenDeleteDialog(true);
-              }}
-            />
-          ))}
-        </tbody>
-      </table>
-      <CategoryModal
-        categoryName={categoryName}
-        setCategoryName={setCategoryName}
-        categoryDescription={categoryDescription}
-        setCategoryDescription={setCategoryDescription}
-        categoryImage={categoryImage}
-        setCategoryImage={setCategoryImage}
-        onSave={() => {
-          if (currentCategory) {
-            setCategories((prev) =>
-              prev.map((item) =>
-                item.id === currentCategory.id
-                  ? {
-                      ...item,
-                      name: categoryName,
-                      description: categoryDescription,
-                      image: categoryImage,
-                    }
-                  : item
-              )
-            );
-          } else {
-            setCategories((prev) => [
-              ...prev,
-              {
-                id: Math.random().toString(),
-                name: categoryName,
-                description: categoryDescription,
-                image: categoryImage,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-              },
-            ]);
-          }
-        }}
-        open={OpenModal}
-        setOpen={(isOpen) => {
-          if (!isOpen) {
-            setCurrentCategory(null);
-          }
-          setOpenModal(isOpen);
-        }}
-      />
+          </tbody>
+        </table>
+        <CategoryModal
+          categoryName={categoryName}
+          setCategoryName={setCategoryName}
+          categoryDescription={categoryDescription}
+          setCategoryDescription={setCategoryDescription}
+          categoryImage={categoryImage}
+          setCategoryImage={setCategoryImage}
+          onSave={() => {
+            if (currentCategory) {
+              setCategories((prev) =>
+                prev.map((item) =>
+                  item.id === currentCategory.id
+                    ? {
+                        ...item,
+                        name: categoryName,
+                        description: categoryDescription,
+                        image: categoryImage,
+                      }
+                    : item
+                )
+              );
+            } else {
+              setCategories((prev) => [
+                ...prev,
+                {
+                  id: Math.random().toString(),
+                  name: categoryName,
+                  description: categoryDescription,
+                  image: categoryImage,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                },
+              ]);
+            }
+          }}
+          open={OpenModal}
+          setOpen={(isOpen) => {
+            if (!isOpen) {
+              setCurrentCategory(null);
+            }
+            setOpenModal(isOpen);
+          }}
+        />
 
-      <DeleteDialog
-        description="Are you sure you want to delete this category?"
-        onDelete={handleDelete}
-        open={OpenDeleteDialog}
-        setOpen={(isOpen: boolean) => {
-          if (!isOpen) setCurrentCategory(null);
-          setOpenDeleteDialog(isOpen);
-        }}
-        title={`Delete ${currentCategory ? currentCategory.name : ""}`}
-      />
-    </div>
+        <DeleteDialog
+          description="Are you sure you want to delete this category?"
+          onDelete={handleDelete}
+          open={OpenDeleteDialog}
+          setOpen={(isOpen: boolean) => {
+            if (!isOpen) setCurrentCategory(null);
+            setOpenDeleteDialog(isOpen);
+          }}
+          title={`Delete ${currentCategory ? currentCategory.name : ""}`}
+        />
+      </div>
+      <Button startIcon={<FiPlus />} onClick={() => setOpenDialog(true)}>
+        Add new category
+      </Button>
+
+      <DialogBox open={OpenDialog} setOpen={setOpenDialog}>
+        <div className="bg-white rounded p-4 shadow-lg flex flex-col sm:w-[30em] w-[20em]">
+          <div className="text-2xl font-bold mb-4">Create New Category</div>
+
+          <div className="flex flex-col gap-3">
+            <UploadImageWrapper setImageUrl={setImageDownloadURL}>
+              <div className="w-full rounded h-[15em] bg-zinc-300 mx-auto">
+                {ImageDownloadURL && (
+                  <img
+                    className="w-full h-full object-cover rounded"
+                    src={ImageDownloadURL}
+                    alt=""
+                  />
+                )}
+              </div>
+            </UploadImageWrapper>
+            <TextInput
+              label="Name"
+              State={categoryName}
+              setState={setCategoryName}
+              placeholder="Enter category name"
+            />
+            <TextInput
+              label="Description"
+              State={categoryDescription}
+              setState={setCategoryDescription}
+              placeholder="Enter category description"
+            />
+
+            <Button
+              onClick={() => {
+                setOpenDialog(false);
+                setCategories((prev) => [
+                  ...prev,
+                  {
+                    id: Math.random().toString(),
+                    name: categoryName,
+                    description: categoryDescription,
+                    image: categoryImage,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                  },
+                ]);
+
+                setCategoryName("");
+                setCategoryDescription("");
+                setCategoryImage("");
+              }}
+              bg={"blue"}
+            >
+              Save Category
+            </Button>
+          </div>
+        </div>
+      </DialogBox>
+    </>
   );
 }
