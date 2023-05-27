@@ -22,7 +22,7 @@ const CategoryModal = ({
   categoryName: string;
   setCategoryName: React.Dispatch<React.SetStateAction<string | null>>;
   categoryImage: string;
-  setCategoryImage: React.Dispatch<React.SetStateAction<string>>;
+  setCategoryImage: any;
   categoryStatus: boolean | "auto";
   setCategoryStatus: React.Dispatch<React.SetStateAction<boolean | "auto" | any>>;
 

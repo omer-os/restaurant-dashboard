@@ -22,11 +22,11 @@ const MenuItemModal = ({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   menuItemName: string;
-  setMenuItemName: React.Dispatch<React.SetStateAction<string>>;
+  setMenuItemName: any;
   menuItemDescription: string;
-  setMenuItemDescription: React.Dispatch<React.SetStateAction<string>>;
+  setMenuItemDescription: any;
   menuItemImage: string;
-  setMenuItemImage: React.Dispatch<React.SetStateAction<string>>;
+  setMenuItemImage: any;
   menuItemPrices: Array<Price>;
   setMenuItemPrices: React.Dispatch<
     React.SetStateAction<Array<Price>>
