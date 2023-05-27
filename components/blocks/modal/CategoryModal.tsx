@@ -4,26 +4,28 @@ import TextInput from "@components/elements/input/TextInput";
 import React, { useState, useEffect } from "react";
 import { GrClose } from "react-icons/gr";
 import { AnimatePresence, motion } from "framer-motion";
+import ToggleOptionsSwitch from "@components/elements/toggle/ToggleOptionsSwitch";
 
 const CategoryModal = ({
   open,
   setOpen,
   categoryName,
   setCategoryName,
-  categoryDescription,
-  setCategoryDescription,
   categoryImage,
   setCategoryImage,
   onSave,
+  categoryStatus,
+  setCategoryStatus,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   categoryName: string;
-  setCategoryName: React.Dispatch<React.SetStateAction<string>>;
-  categoryDescription: string;
-  setCategoryDescription: React.Dispatch<React.SetStateAction<string>>;
+  setCategoryName: React.Dispatch<React.SetStateAction<string | null>>;
   categoryImage: string;
   setCategoryImage: React.Dispatch<React.SetStateAction<string>>;
+  categoryStatus: boolean | "auto";
+  setCategoryStatus: React.Dispatch<React.SetStateAction<boolean | "auto" | any>>;
+
   onSave: () => void;
 }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -70,15 +72,17 @@ const CategoryModal = ({
     <AnimatePresence>
       {open && (
         <>
-          <motion.div
-            className="overlay bg-black/40 inset-0 fixed z-50"
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={overlayVariants}
-            onClick={handleCloseModal}
-            transition={{ duration: 0.2 }}
-          ></motion.div>
+          <div className="fixed inset-0 z-50">
+            <motion.div
+              className="overlay bg-black/40 inset-0 fixed"
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={overlayVariants}
+              onClick={handleCloseModal}
+              transition={{ duration: 0.2 }}
+            ></motion.div>
+          </div>
 
           <motion.div
             className="fixed bg-white shadow-xl md:rounded-l-3xl md:rounded-t-none rounded-t-3xl rounded-l-none md:h-full h-[75vh] md:w-[50vw] w-full bottom-0 md:top-0 right-0 md:left-auto overflow-y-scroll z-50"
@@ -89,7 +93,7 @@ const CategoryModal = ({
             transition={{ duration: 0.2 }}
           >
             <div className="flex justify-between items-center bg-white sticky top-0 left-0 px-5 py-3 z-10">
-              <div className="text-3xl font-bold">{categoryName}</div>
+              <div className="text-3xl font-bold truncate">{categoryName}</div>
               <Button IconButton={true} bg="white" onClick={handleCloseModal}>
                 <GrClose />
               </Button>
@@ -101,23 +105,28 @@ const CategoryModal = ({
                   <TextInput
                     label="Category Name"
                     placeholder="Enter Category Name"
-                    State={categoryName}
+                    State={categoryName || ""}
                     setState={setCategoryName}
-                    bg="white"
-                  />
-                  <TextInput
-                    label="Category Description"
-                    placeholder="Enter Category Description"
-                    State={categoryDescription}
-                    setState={setCategoryDescription}
                     bg="white"
                   />
                   <TextInput
                     label="Category Image URL"
                     placeholder="Enter Category Image URL"
-                    State={categoryImage}
+                    State={categoryImage || ""}
                     setState={setCategoryImage}
                     bg="white"
+                  />
+
+                  <br />
+                  <div className="text-lg font-bold">Category Status</div>
+                  <ToggleOptionsSwitch
+                    options={[
+                      { name: "Active", value: true },
+                      { name: "Inactive", value: false },
+                      { name: "Auto", value: "auto" },
+                    ]}
+                    State={categoryStatus}
+                    setState={setCategoryStatus}
                   />
                 </div>
               </div>
