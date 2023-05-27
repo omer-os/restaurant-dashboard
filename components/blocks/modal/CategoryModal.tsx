@@ -18,13 +18,13 @@ const CategoryModal = ({
   setCategoryStatus,
 }: {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: any;
   categoryName: string;
-  setCategoryName: React.Dispatch<React.SetStateAction<string | null>>;
+  setCategoryName: any;
   categoryImage: string;
   setCategoryImage: any;
   categoryStatus: boolean | "auto";
-  setCategoryStatus: React.Dispatch<React.SetStateAction<boolean | "auto" | any>>;
+  setCategoryStatus: any
 
   onSave: () => void;
 }) => {

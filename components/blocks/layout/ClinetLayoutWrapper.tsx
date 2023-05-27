@@ -1,10 +1,10 @@
 "use client";
 
-import React, { createContext, useState, Dispatch, SetStateAction } from "react";
+import React, { createContext, useState } from "react";
 
 export const ClientWrapperContext = createContext<{
   openSideBar: boolean;
-  setOpenSideBar: Dispatch<SetStateAction<boolean>>;
+  setOpenSideBar: any
 }>({
   openSideBar: false,
   setOpenSideBar: () => {},

@@ -9,7 +9,7 @@ export type Price = {
 
 type PricesTableProps = {
   prices: Price[];
-  setPrices: React.Dispatch<React.SetStateAction<Price[]>>;
+  setPrices: any;
 };
 
 const PricesTable: React.FC<PricesTableProps> = ({ prices, setPrices }) => {

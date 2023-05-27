@@ -17,17 +17,9 @@ interface CategoryContextProps {
     status: boolean | "auto";
     id: string;
   } | null;
-  setSelectedCategory: React.Dispatch<
-    React.SetStateAction<{
-      image: string;
-      name: string;
-      itemsNo: number;
-      status: boolean | "auto";
-      id: string;
-    } | null>
-  >;
+  setSelectedCategory: any;
   OpenUpdateModal: boolean; // Add the OpenUpdateModal state
-  setOpenUpdateModal: React.Dispatch<React.SetStateAction<boolean>>; // Add the setOpenUpdateModal state updater
+  setOpenUpdateModal: any;
 }
 
 export const CategoriesContext = createContext<CategoryContextProps>({

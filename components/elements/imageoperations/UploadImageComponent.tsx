@@ -7,8 +7,6 @@ import React, {
   ReactElement,
   ChangeEvent,
   useEffect,
-  Dispatch,
-  SetStateAction,
 } from "react";
 import { storage } from "@lib/firebase";
 import {
@@ -20,7 +18,7 @@ import {
 
 interface UploadImageWrapperProps {
   children: ReactNode;
-  setImageUrl: Dispatch<SetStateAction<string | null>>;
+  setImageUrl: any
 }
 
 const UploadImageWrapper = ({

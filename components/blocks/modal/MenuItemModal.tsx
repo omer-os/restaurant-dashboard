@@ -20,7 +20,7 @@ const MenuItemModal = ({
   onSave,
 }: {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: any;
   menuItemName: string;
   setMenuItemName: any;
   menuItemDescription: string;
@@ -28,9 +28,7 @@ const MenuItemModal = ({
   menuItemImage: string;
   setMenuItemImage: any;
   menuItemPrices: Array<Price>;
-  setMenuItemPrices: React.Dispatch<
-    React.SetStateAction<Array<Price>>
-  >;
+  setMenuItemPrices: any;
   onSave: () => void;
 }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
