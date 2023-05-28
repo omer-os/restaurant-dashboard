@@ -5,68 +5,149 @@ import TableRow from "./TableRow";
 import { useContext, useEffect, useState } from "react";
 import { CategoriesContext } from "./CategoryContext";
 import dynamic from "next/dynamic";
+import { Category } from "@lib/interfacses";
 
 const CategoryModal = dynamic(
   () => import("@components/blocks/modal/CategoryModal")
 );
 
-const tableHeadings = ["Image", "Name", "Items", "Status", "Action"];
-const categoryData = [
+const tableHeadings = ["Image", "Name", "Items", "Status", "Actions"];
+const categoryData: Category[] = [
   {
     image: "https://placehold.co/300x300",
     name: "Pasta Category oner ourebno einp",
     itemsNo: 5,
     status: true,
     id: "1",
+    activeDate: {
+      startDate: {
+        day: 1,
+        month: 1,
+      },
+      endDate: {
+        day: 1,
+        month: 1,
+      },
+    },
   },
   {
     image: "https://placehold.co/300x300",
     name: "Pasta Category",
     itemsNo: 5,
-    status: "Active",
+    status: true,
     id: "2",
+    activeDate: {
+      startDate: {
+        day: 1,
+        month: 1,
+      },
+      endDate: {
+        day: 1,
+        month: 1,
+      },
+    },
   },
   {
     image: "https://placehold.co/300x300",
     name: "Pasta Category",
     itemsNo: 5,
-    status: "Active",
+    status: false,
     id: "3",
+    activeDate: {
+      startDate: {
+        day: 1,
+        month: 1,
+      },
+      endDate: {
+        day: 1,
+        month: 1,
+      },
+    },
   },
   {
     image: "https://placehold.co/300x300",
     name: "Pasta Category",
     itemsNo: 5,
-    status: "Active",
+    status: false,
     id: "4",
+    activeDate: {
+      startDate: {
+        day: 1,
+        month: 1,
+      },
+      endDate: {
+        day: 1,
+        month: 1,
+      },
+    },
   },
   {
     image: "https://placehold.co/300x300",
     name: "Pasta Category",
     itemsNo: 5,
-    status: "Active",
+    status: true,
     id: "5",
+    activeDate: {
+      startDate: {
+        day: 1,
+        month: 1,
+      },
+      endDate: {
+        day: 1,
+        month: 1,
+      },
+    },
   },
   {
     image: "https://placehold.co/300x300",
     name: "Pasta Category",
     itemsNo: 5,
-    status: "Active",
+    status: "auto",
     id: "6",
+    activeDate: {
+      startDate: {
+        day: 1,
+        month: 1,
+      },
+      endDate: {
+        day: 1,
+        month: 1,
+      },
+    },
   },
   {
     image: "https://placehold.co/300x300",
     name: "Pasta Category",
     itemsNo: 5,
-    status: "Active",
+    status: true,
     id: "7",
+    activeDate: {
+      startDate: {
+        day: 1,
+        month: 1,
+      },
+      endDate: {
+        day: 1,
+        month: 1,
+      },
+    },
   },
   {
     image: "https://placehold.co/300x300",
     name: "Pasta Category",
     itemsNo: 5,
-    status: "Active",
+    status: true,
     id: "8",
+    activeDate: {
+      startDate: {
+        day: 1,
+        month: 1,
+      },
+      endDate: {
+        day: 1,
+        month: 1,
+      },
+    },
   },
 ];
 export default function CategoriesTable() {
@@ -90,35 +171,42 @@ export default function CategoriesTable() {
     selectedCategory?.status
   );
 
+  const [activeDate, setActiveDate] = useState({
+    startDate: selectedCategory?.activeDate?.startDate,
+    endDate: selectedCategory?.activeDate?.endDate,
+  });
+
   useEffect(() => {
     setCategoryName(selectedCategory?.name);
     setCategoryImage(selectedCategory?.image);
     setCategoryStatus(selectedCategory?.status);
+    setActiveDate({
+      startDate: selectedCategory?.activeDate?.startDate || 1,
+      endDate: selectedCategory?.activeDate?.endDate || 1,
+    });
   }, [selectedCategory]);
 
   const updateHandeler = () => {
-    setTimeout(
-      () => {
-        setOpenUpdateModal(false);
+    setTimeout(() => {
+      setOpenUpdateModal(false);
 
-        console.log(selectedCategory);
-
-        setCategories(
-          categories.map((category) =>
-            category.id === selectedCategory?.id
-              ? {
-                  ...category,
-                  name: categoryName,
-                  image: categoryImage,
-                  status: categoryStatus,
-                }
-              : category
-          )
-        );
-      },
-
-      1000
-    );
+      setCategories(
+        categories.map((category) =>
+          category.id === selectedCategory?.id
+            ? {
+                ...category,
+                name: categoryName,
+                image: categoryImage,
+                status: categoryStatus,
+                activeDate: {
+                  startDate: activeDate.startDate,
+                  endDate: activeDate.endDate,
+                },
+              }
+            : category
+        )
+      );
+    }, 1000);
   };
 
   return (
@@ -169,6 +257,19 @@ export default function CategoriesTable() {
           onSave={updateHandeler}
           categoryStatus={categoryStatus === undefined ? true : categoryStatus}
           setCategoryStatus={setCategoryStatus}
+          activeDate={
+            activeDate || {
+              startDate: {
+                day: 1,
+                month: 1,
+              },
+              endDate: {
+                day: 1,
+                month: 1,
+              },
+            }
+          }
+          setActiveDate={setActiveDate}
         />{" "}
       </div>
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 flex items-center">

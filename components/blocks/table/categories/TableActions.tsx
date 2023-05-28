@@ -4,18 +4,9 @@ import DeleteDialog from "@components/blocks/dialog/DeleteDialog";
 import { useContext, useState } from "react";
 import { CategoriesContext } from "./CategoryContext";
 import Link from "next/link";
+import { Category } from "@lib/interfacses";
 
-export default function TableActions({
-  category,
-}: {
-  category: {
-    image: string;
-    name: string;
-    itemsNo: number;
-    status: boolean | "auto";
-    id: string;
-  };
-}) {
+export default function TableActions({ category }: { category: Category }) {
   const { categories, setCategories, setSelectedCategory, setOpenUpdateModal } =
     useContext(CategoriesContext);
   const [OpenDeleteModal, setOpenDeleteModal] = useState(false);

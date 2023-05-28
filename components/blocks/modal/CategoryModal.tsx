@@ -14,8 +14,10 @@ const CategoryModal = ({
   categoryImage,
   setCategoryImage,
   onSave,
-  categoryStatus,
+  categoryStatus = true,
   setCategoryStatus,
+  activeDate,
+  setActiveDate,
 }: {
   open: boolean;
   setOpen: any;
@@ -24,7 +26,18 @@ const CategoryModal = ({
   categoryImage: string;
   setCategoryImage: any;
   categoryStatus: boolean | "auto";
-  setCategoryStatus: any
+  setCategoryStatus: any;
+  activeDate: {
+    startDate: {
+      day: number;
+      month: number;
+    };
+    endDate: {
+      day: number;
+      month: number;
+    };
+  };
+  setActiveDate: any;
 
   onSave: () => void;
 }) => {
@@ -128,6 +141,75 @@ const CategoryModal = ({
                     State={categoryStatus}
                     setState={setCategoryStatus}
                   />
+
+                  {categoryStatus === "auto" && (
+                    <div className="grid grid-cols-2 gap-4">
+                      {[
+                        {
+                          label: "Start Date",
+                          date: activeDate?.startDate,
+                          setDate: (date: { month: number; day: number }) =>
+                            setActiveDate((prev: any) => ({
+                              ...prev,
+                              startDate: date,
+                            })),
+                        },
+                        {
+                          label: "End Date",
+                          date: activeDate?.endDate,
+                          setDate: (date: { month: number; day: number }) =>
+                            setActiveDate((prev: any) => ({
+                              ...prev,
+                              endDate: date,
+                            })),
+                        },
+                      ].map((item, index) => (
+                        <div key={index + item.label} className="mb-4">
+                          <label className="block text-gray-700 text-sm font-bold mb-2">
+                            {item.label}
+                          </label>
+                          <div className="flex gap-4">
+                            <select
+                              value={item.date?.month}
+                              onChange={(e) =>
+                                item.setDate({
+                                  ...item.date,
+                                  month: parseInt(e.target.value),
+                                })
+                              }
+                              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            >
+                              {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                                (month) => (
+                                  <option key={month} value={month}>
+                                    {month}
+                                  </option>
+                                )
+                              )}
+                            </select>
+                            <select
+                              value={item.date?.day}
+                              onChange={(e) =>
+                                item.setDate({
+                                  ...item.date,
+                                  day: parseInt(e.target.value),
+                                })
+                              }
+                              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            >
+                              {Array.from({ length: 31 }, (_, i) => i + 1).map(
+                                (day) => (
+                                  <option key={day} value={day}>
+                                    {day}
+                                  </option>
+                                )
+                              )}
+                            </select>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <Button
