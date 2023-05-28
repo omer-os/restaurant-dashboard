@@ -2,21 +2,15 @@
 
 import { FiPlus, FiSearch } from "react-icons/fi";
 import TableRow from "./TableRow";
-import { useContext, useEffect, useState } from "react";
-import { CategoriesContext } from "./CategoryContext";
-import dynamic from "next/dynamic";
 import { Category } from "@lib/interfacses";
 import { useCategoryData } from "@components/hooks/useCategoryData";
-
-const CategoryModal = dynamic(
-  () => import("@components/blocks/modal/CategoryModal")
-);
+import CategoryModal from "@components/blocks/modal/CategoryModal";
 
 const tableHeadings = ["Image", "Name", "Items", "Status", "Actions"];
 const categoryData: Category[] = [
   {
     image: "https://placehold.co/300x300",
-    name: "Pasta Category oner ourebno einp",
+    name: "n erjon kpew oner ",
     itemsNo: 5,
     status: true,
     id: "1",
@@ -33,7 +27,7 @@ const categoryData: Category[] = [
   },
   {
     image: "https://placehold.co/300x300",
-    name: "Pasta Category",
+    name: "kmer pie",
     itemsNo: 5,
     status: true,
     id: "2",
@@ -50,7 +44,7 @@ const categoryData: Category[] = [
   },
   {
     image: "https://placehold.co/300x300",
-    name: "Pasta Category",
+    name: "kmerjnrtp porem",
     itemsNo: 5,
     status: false,
     id: "3",
@@ -67,7 +61,7 @@ const categoryData: Category[] = [
   },
   {
     image: "https://placehold.co/300x300",
-    name: "Pasta Category",
+    name: "momt Category",
     itemsNo: 5,
     status: false,
     id: "4",
@@ -84,7 +78,7 @@ const categoryData: Category[] = [
   },
   {
     image: "https://placehold.co/300x300",
-    name: "Pasta Category",
+    name: "lr pomyu",
     itemsNo: 5,
     status: true,
     id: "5",
@@ -101,7 +95,7 @@ const categoryData: Category[] = [
   },
   {
     image: "https://placehold.co/300x300",
-    name: "Pasta Category",
+    name: "opktp oern irgt poirnoitr",
     itemsNo: 5,
     status: "auto",
     id: "6",
@@ -118,7 +112,7 @@ const categoryData: Category[] = [
   },
   {
     image: "https://placehold.co/300x300",
-    name: "Pasta Category",
+    name: "krtg ipnryhp",
     itemsNo: 5,
     status: true,
     id: "7",
@@ -135,7 +129,7 @@ const categoryData: Category[] = [
   },
   {
     image: "https://placehold.co/300x300",
-    name: "Pasta Category",
+    name: "mkipihy njortg",
     itemsNo: 5,
     status: true,
     id: "8",
@@ -166,6 +160,8 @@ export default function CategoriesTable() {
     setCategoryStatus,
     activeDate,
     setActiveDate,
+    searchQuery,
+    setSearchQuery,
   } = useCategoryData(categoryData);
 
   const updateHandeler = () => {
@@ -224,13 +220,15 @@ export default function CategoriesTable() {
                   type="text"
                   placeholder="Search for menus..."
                   className="px-4 border w-full border-gray-300 rounded py-2 pl-8"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </div>
           </div>
         </div>
         <table className="w-full min-w-max divide-y divide-gray-200">
-          <thead className="bg-gray-200 sticky top-0 left-0">
+          <thead className="bg-gray-100 border-b sticky top-0 left-0">
             <tr>
               {tableHeadings.map((heading, index) => (
                 <th
@@ -244,9 +242,13 @@ export default function CategoriesTable() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {categories.map((category, index) => (
-              <TableRow key={category.name + index} category={category} />
-            ))}
+            {categories
+              .filter((category) =>
+                category.name.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((category, index) => (
+                <TableRow key={category.name + index} category={category} />
+              ))}
           </tbody>
         </table>
         <CategoryModal
@@ -272,7 +274,7 @@ export default function CategoriesTable() {
             }
           }
           setActiveDate={setActiveDate}
-        />{" "}
+        />
       </div>
       <button
         onClick={addCategoryHandler}

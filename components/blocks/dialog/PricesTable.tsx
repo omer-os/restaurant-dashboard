@@ -56,9 +56,9 @@ const PricesTable: React.FC<PricesTableProps> = ({ prices, setPrices }) => {
             </td>
           </tr>
         ))}
-        <br />
         <tr>
           <td>
+            <br />
             <Button
               onClick={() => {
                 setPrices([...prices, { name: "", value: "" }]);

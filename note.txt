@@ -20,3 +20,10 @@ Order Management:
 Overview of all orders with details (order number, customer name, menu items ordered, total price, order status, order time).
 Ability to update the status of an order (e.g., received, in preparation, ready for pickup/delivery, completed).
 Ability to view past orders and their details.
+
+
+
+
+
+
+https://dev.to/geiel/how-to-use-firebase-authentication-in-nextjs-13-client-and-server-side-1bbn

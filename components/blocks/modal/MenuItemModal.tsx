@@ -1,36 +1,16 @@
 "use client";
 import Button from "@components/elements/button/Button";
 import TextInput from "@components/elements/input/TextInput";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { GrClose } from "react-icons/gr";
 import { AnimatePresence, motion } from "framer-motion";
 import PricesTable, { Price } from "../dialog/PricesTable";
+import { MenuitemContext } from "../table/menus/MenuContext";
 
-const MenuItemModal = ({
-  open,
-  setOpen,
-  menuItemName,
-  setMenuItemName,
-  menuItemDescription,
-  setMenuItemDescription,
-  menuItemImage,
-  setMenuItemImage,
-  menuItemPrices,
-  setMenuItemPrices,
-  onSave,
-}: {
-  open: boolean;
-  setOpen: any;
-  menuItemName: string;
-  setMenuItemName: any;
-  menuItemDescription: string;
-  setMenuItemDescription: any;
-  menuItemImage: string;
-  setMenuItemImage: any;
-  menuItemPrices: Array<Price>;
-  setMenuItemPrices: any;
-  onSave: () => void;
-}) => {
+const MenuItemModal = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
+  const { selectedMenuItem, setSelectedMenuItem, setMenuItems, menuItems } =
+    useContext(MenuitemContext);
+
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const handleCloseModal = () => {
     setOpen(false);
@@ -66,10 +46,17 @@ const MenuItemModal = ({
     exit: { opacity: 0 },
   };
 
-  const handleSave = () => {
-    onSave();
-    setOpen(false);
-  };
+  const [Name, setName] = useState<string>(selectedMenuItem?.name);
+  const [Description, setDescription] = useState<string>(
+    selectedMenuItem?.description || ""
+  );
+  const [Image, setImage] = useState<string>(selectedMenuItem?.image_url || "");
+
+  useEffect(() => {
+    setName(selectedMenuItem?.name || "");
+    setDescription(selectedMenuItem?.description || "");
+    setImage(selectedMenuItem?.image_url || "");
+  }, [selectedMenuItem]);
 
   return (
     <AnimatePresence>
@@ -94,7 +81,7 @@ const MenuItemModal = ({
             transition={{ duration: 0.2 }}
           >
             <div className="flex justify-between items-center bg-white sticky top-0 left-0 px-5 py-3 z-10">
-              <div className="text-3xl font-bold">{menuItemName}</div>
+              <div className="text-3xl font-bold">{selectedMenuItem.name}</div>
               <Button IconButton={true} bg="white" onClick={handleCloseModal}>
                 <GrClose />
               </Button>
@@ -106,34 +93,52 @@ const MenuItemModal = ({
                   <TextInput
                     label="Menu Item Name"
                     placeholder="Enter Menu Item Name"
-                    State={menuItemName}
-                    setState={setMenuItemName}
+                    State={Name}
+                    setState={setName}
                     bg="white"
                   />
                   <TextInput
                     label="Menu Item Description"
                     placeholder="Enter Menu Item Description"
-                    State={menuItemDescription}
-                    setState={setMenuItemDescription}
+                    State={Description}
+                    setState={setDescription}
                     bg="white"
                   />
                   <TextInput
                     label="Menu Item Image URL"
                     placeholder="Enter Menu Item Image URL"
-                    State={menuItemImage}
-                    setState={setMenuItemImage}
+                    State={Image}
+                    setState={setImage}
                     bg="white"
-                  />
-                  <PricesTable
-                    prices={menuItemPrices}
-                    setPrices={setMenuItemPrices}
                   />
                 </div>
               </div>
               <Button
                 width="full"
                 className="justify-center mt-5 mb-6"
-                onClick={handleSave}
+                onClick={() => {
+                  setSelectedMenuItem({
+                    ...selectedMenuItem,
+                    name: Name,
+                    description: Description,
+                    image_url: Image,
+                  });
+                  setMenuItems(
+                    menuItems.map((item) => {
+                      if (item.id === selectedMenuItem.id) {
+                        return {
+                          ...item,
+                          name: Name,
+                          description: Description,
+                          image_url: Image,
+                        };
+                      }
+                      return item;
+                    })
+                  );
+
+                  handleCloseModal();
+                }}
               >
                 Save
               </Button>

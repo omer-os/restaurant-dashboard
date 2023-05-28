@@ -27,6 +27,9 @@ export const useCategoryData = (categoryData: Category[]) => {
     endDate: selectedCategory?.activeDate?.endDate,
   });
 
+  const [searchQuery, setSearchQuery] = useState("");
+
+
   useEffect(() => {
     setCategories(categoryData);
   }, []);
@@ -56,5 +59,7 @@ export const useCategoryData = (categoryData: Category[]) => {
     setCategoryStatus,
     activeDate,
     setActiveDate,
+    searchQuery,
+    setSearchQuery,
   };
 };

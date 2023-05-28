@@ -113,6 +113,7 @@ const CategoryModal = ({
               animate="animate"
               exit="exit"
               variants={overlayVariants}
+              onTouchStart={handleCloseModal}
               onClick={handleCloseModal}
               transition={{ duration: 0.2 }}
             ></motion.div>
