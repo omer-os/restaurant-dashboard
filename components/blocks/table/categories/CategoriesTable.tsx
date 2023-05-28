@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { CategoriesContext } from "./CategoryContext";
 import dynamic from "next/dynamic";
 import { Category } from "@lib/interfacses";
+import { useCategoryData } from "@components/hooks/useCategoryData";
 
 const CategoryModal = dynamic(
   () => import("@components/blocks/modal/CategoryModal")
@@ -157,56 +158,57 @@ export default function CategoriesTable() {
     OpenUpdateModal,
     setOpenUpdateModal,
     selectedCategory,
-  } = useContext(CategoriesContext);
-
-  useEffect(() => {
-    setCategories(categoryData);
-  }, []);
-
-  const [categoryName, setCategoryName] = useState<any>(selectedCategory?.name);
-  const [categoryImage, setCategoryImage] = useState<any>(
-    selectedCategory?.image
-  );
-  const [categoryStatus, setCategoryStatus] = useState(
-    selectedCategory?.status
-  );
-
-  const [activeDate, setActiveDate] = useState({
-    startDate: selectedCategory?.activeDate?.startDate,
-    endDate: selectedCategory?.activeDate?.endDate,
-  });
-
-  useEffect(() => {
-    setCategoryName(selectedCategory?.name);
-    setCategoryImage(selectedCategory?.image);
-    setCategoryStatus(selectedCategory?.status);
-    setActiveDate({
-      startDate: selectedCategory?.activeDate?.startDate || 1,
-      endDate: selectedCategory?.activeDate?.endDate || 1,
-    });
-  }, [selectedCategory]);
+    categoryName,
+    setCategoryName,
+    categoryImage,
+    setCategoryImage,
+    categoryStatus,
+    setCategoryStatus,
+    activeDate,
+    setActiveDate,
+  } = useCategoryData(categoryData);
 
   const updateHandeler = () => {
     setTimeout(() => {
-      setOpenUpdateModal(false);
-
-      setCategories(
-        categories.map((category) =>
-          category.id === selectedCategory?.id
-            ? {
-                ...category,
-                name: categoryName,
-                image: categoryImage,
-                status: categoryStatus,
-                activeDate: {
-                  startDate: activeDate.startDate,
-                  endDate: activeDate.endDate,
-                },
-              }
-            : category
-        )
+      const updatedCategories = categories.map((category) =>
+        category.id === selectedCategory?.id
+          ? {
+              ...category,
+              name: categoryName,
+              image: categoryImage,
+              status: categoryStatus,
+              activeDate: {
+                startDate: activeDate.startDate,
+                endDate: activeDate.endDate,
+              },
+            }
+          : category
       );
+      setCategories(updatedCategories);
+      setOpenUpdateModal(false);
     }, 1000);
+  };
+
+  const addCategoryHandler = () => {
+    const newCategoryId = Date.now().toString(); // Using timestamp as a temporary unique ID
+    const newCategory = {
+      image: "https://placehold.co/300x300",
+      name: "New Category",
+      itemsNo: 0,
+      status: true,
+      id: newCategoryId,
+      activeDate: {
+        startDate: {
+          day: 1,
+          month: 1,
+        },
+        endDate: {
+          day: 1,
+          month: 1,
+        },
+      },
+    };
+    setCategories([newCategory, ...categories]);
   };
 
   return (
@@ -272,7 +274,10 @@ export default function CategoriesTable() {
           setActiveDate={setActiveDate}
         />{" "}
       </div>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 flex items-center">
+      <button
+        onClick={addCategoryHandler}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 flex items-center"
+      >
         <FiPlus className="mr-2" />
         Add new category
       </button>

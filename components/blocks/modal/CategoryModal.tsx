@@ -81,6 +81,27 @@ const CategoryModal = ({
     setOpen(false);
   };
 
+  useEffect(() => {
+    // Push a new history entry when the modal opens
+    if (open) {
+      window.history.pushState(null, "", window.location.pathname);
+    }
+
+    // Handle the back button press
+    const handleBackButton = (event: PopStateEvent) => {
+      if (open) {
+        setOpen(false);
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, [open]);
+
   return (
     <AnimatePresence>
       {open && (
