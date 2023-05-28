@@ -4,8 +4,8 @@ import TextInput from "@components/elements/input/TextInput";
 import React, { useState, useEffect, useContext } from "react";
 import { GrClose } from "react-icons/gr";
 import { AnimatePresence, motion } from "framer-motion";
-import PricesTable, { Price } from "../dialog/PricesTable";
 import { MenuitemContext } from "../table/menus/MenuContext";
+import ToggleOptionsSwitch from "@components/elements/toggle/ToggleOptionsSwitch";
 
 const MenuItemModal = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   const { selectedMenuItem, setSelectedMenuItem, setMenuItems, menuItems } =
@@ -51,11 +51,42 @@ const MenuItemModal = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
     selectedMenuItem?.description || ""
   );
   const [Image, setImage] = useState<string>(selectedMenuItem?.image_url || "");
+  const [BasePrice, setBasePrice] = useState<number>(
+    selectedMenuItem?.basePrice
+  );
+  const [Variants, setVariants] = useState<{ name: string; price: number }[]>(
+    selectedMenuItem?.variants || []
+  );
+  const [Extras, setExtras] = useState<
+    { name: string; additionalCost: number }[]
+  >(selectedMenuItem?.extras || []);
+  const [Status, setStatus] = useState<boolean | "auto" | "basedOnCategory">(
+    selectedMenuItem?.status || "basedOnCategory"
+  );
+  const [ActiveDate, setActiveDate] = useState<{
+    startDate: { month: number; day: number };
+    endDate: { month: number; day: number };
+  }>(
+    selectedMenuItem?.activeDate || {
+      startDate: { month: 1, day: 1 },
+      endDate: { month: 12, day: 31 },
+    }
+  );
 
   useEffect(() => {
     setName(selectedMenuItem?.name || "");
     setDescription(selectedMenuItem?.description || "");
     setImage(selectedMenuItem?.image_url || "");
+    setBasePrice(selectedMenuItem?.basePrice || 0);
+    setVariants(selectedMenuItem?.variants || []);
+    setExtras(selectedMenuItem?.extras || []);
+    setStatus(selectedMenuItem?.status || false);
+    setActiveDate(
+      selectedMenuItem?.activeDate || {
+        startDate: { month: 1, day: 1 },
+        endDate: { month: 12, day: 31 },
+      }
+    );
   }, [selectedMenuItem]);
 
   return (
@@ -69,6 +100,7 @@ const MenuItemModal = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
             exit="exit"
             variants={overlayVariants}
             onClick={handleCloseModal}
+            onTouchStart={handleCloseModal}
             transition={{ duration: 0.2 }}
           ></motion.div>
 
@@ -104,13 +136,99 @@ const MenuItemModal = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
                     setState={setDescription}
                     bg="white"
                   />
+
                   <TextInput
-                    label="Menu Item Image URL"
-                    placeholder="Enter Menu Item Image URL"
-                    State={Image}
-                    setState={setImage}
+                    label="Base Price"
+                    placeholder="Enter Base Price"
+                    State={BasePrice.toString()}
+                    setState={setBasePrice}
                     bg="white"
                   />
+                  {/* Add components for Variants and Extras here */}
+                  <div className="text-lg font-bold">Menu Item Status</div>
+                  <div className="w-full overflow-x-scroll">
+                    <ToggleOptionsSwitch
+                      options={[
+                        { name: "Based on category", value: "basedOnCategory" },
+                        { name: "Active", value: true },
+                        { name: "Auto", value: "auto" },
+                        { name: "Inactive", value: false },
+                      ]}
+                      State={Status}
+                      setState={setStatus}
+                    />
+
+                    {Status === "auto" && (
+                      <div className="grid grid-cols-2 gap-4">
+                        {[
+                          {
+                            label: "Start Date",
+                            date: ActiveDate?.startDate,
+                            setDate: (date: { month: number; day: number }) =>
+                              setActiveDate((prev: any) => ({
+                                ...prev,
+                                startDate: date,
+                              })),
+                          },
+                          {
+                            label: "End Date",
+                            date: ActiveDate?.endDate,
+                            setDate: (date: { month: number; day: number }) =>
+                              setActiveDate((prev: any) => ({
+                                ...prev,
+                                endDate: date,
+                              })),
+                          },
+                        ].map((item, index) => (
+                          <div key={index + item.label} className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2">
+                              {item.label}
+                            </label>
+                            <div className="flex gap-4">
+                              <select
+                                value={item.date?.month}
+                                onChange={(e) =>
+                                  item.setDate({
+                                    ...item.date,
+                                    month: parseInt(e.target.value),
+                                  })
+                                }
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                              >
+                                {Array.from(
+                                  { length: 12 },
+                                  (_, i) => i + 1
+                                ).map((month) => (
+                                  <option key={month} value={month}>
+                                    {month}
+                                  </option>
+                                ))}
+                              </select>
+                              <select
+                                value={item.date?.day}
+                                onChange={(e) =>
+                                  item.setDate({
+                                    ...item.date,
+                                    day: parseInt(e.target.value),
+                                  })
+                                }
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                              >
+                                {Array.from(
+                                  { length: 31 },
+                                  (_, i) => i + 1
+                                ).map((day) => (
+                                  <option key={day} value={day}>
+                                    {day}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <Button
@@ -122,6 +240,11 @@ const MenuItemModal = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
                     name: Name,
                     description: Description,
                     image_url: Image,
+                    basePrice: BasePrice,
+                    variants: Variants,
+                    extras: Extras,
+                    status: Status,
+                    activeDate: ActiveDate,
                   });
                   setMenuItems(
                     menuItems.map((item) => {
@@ -131,6 +254,11 @@ const MenuItemModal = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
                           name: Name,
                           description: Description,
                           image_url: Image,
+                          basePrice: BasePrice,
+                          variants: Variants,
+                          extras: Extras,
+                          status: Status,
+                          activeDate: ActiveDate,
                         };
                       }
                       return item;

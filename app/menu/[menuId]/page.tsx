@@ -8,13 +8,6 @@ import { BsArrowLeft } from "react-icons/bs";
 export default function page() {
   return (
     <div className="p-4 bg-white">
-      <div className="w-max">
-        <Link href="/menu">
-          <Button startIcon={<BsArrowLeft />} bg={"white"}>
-            Go Back
-          </Button>
-        </Link>
-      </div>
 
       <MenuItemProvider>
         <MenuItemsTable />

@@ -31,7 +31,7 @@ export default function ToggleOptionsSwitch({
               />
             )}
 
-            <span className="z-10 relative">{option.name}</span>
+            <span className="z-10 relative min-w-max">{option.name}</span>
           </div>
         ))}
       </AnimatePresence>

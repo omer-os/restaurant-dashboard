@@ -10,12 +10,39 @@ type MenuItemProps = {
 };
 
 const TableRow: React.FC<MenuItemProps> = ({ item, setOpenDeleteDialog }) => {
-  const {
-    OpenUpdateModal,
-    setOpenUpdateModal,
-    selectedMenuItem,
-    setSelectedMenuItem,
-  } = useContext(MenuitemContext);
+  const { setOpenUpdateModal, setSelectedMenuItem } =
+    useContext(MenuitemContext);
+
+  let statusClasses = "";
+
+  switch (item.status) {
+    case true:
+      statusClasses = "text-green-700 bg-green-100 border-green-300";
+      break;
+    case false:
+      statusClasses = "text-red-700 bg-red-100 border-red-300";
+      break;
+    case "auto":
+      statusClasses = "text-blue-700 bg-blue-100 border-blue-300";
+      break;
+    default:
+      statusClasses = "text-yellow-700 bg-yellow-100 border-yellow-300";
+  }
+
+  let statusText = "";
+  switch (item.status) {
+    case true:
+      statusText = "Active";
+      break;
+    case false:
+      statusText = "Inactive";
+      break;
+    case "auto":
+      statusText = "Auto";
+      break;
+    default:
+      statusText = "based on category";
+  }
 
   return (
     <tr>
@@ -31,8 +58,14 @@ const TableRow: React.FC<MenuItemProps> = ({ item, setOpenDeleteDialog }) => {
         {item.name}
       </td>
 
-      <td className="px-6 py-4 max-w-[5em] truncate whitespace-nowrap">
-        {item.description}
+      <td className="px-6 py-4">
+        <div
+          className={`flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full w-max ${statusClasses}`}
+        >
+          <div className="text-xs font-normal leading-none max-w-full flex-initial">
+            {statusText}
+          </div>
+        </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">{item.basePrice}</td>
       <td className="px-6 py-4 whitespace-nowrap">{item.variants?.length}</td>
@@ -43,7 +76,6 @@ const TableRow: React.FC<MenuItemProps> = ({ item, setOpenDeleteDialog }) => {
           className="text-blue-600 hover:text-blue-900 mr-2 hover:bg-blue-200 rounded-full p-2 hover:ring-1 ring-blue-600"
           onClick={() => {
             setSelectedMenuItem(item);
-
             setOpenUpdateModal(true);
           }}
         >

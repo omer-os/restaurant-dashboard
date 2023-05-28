@@ -157,8 +157,8 @@ const CategoryModal = ({
                   <ToggleOptionsSwitch
                     options={[
                       { name: "Active", value: true },
-                      { name: "Inactive", value: false },
                       { name: "Auto", value: "auto" },
+                      { name: "Inactive", value: false },
                     ]}
                     State={categoryStatus}
                     setState={setCategoryStatus}

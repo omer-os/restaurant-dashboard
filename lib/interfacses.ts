@@ -26,6 +26,8 @@ export interface MenuItem {
     additionalCost: number;
   }[];
 
+  status: boolean | "auto" | "basedOnCategory";
+
   activeDate: {
     startDate: { month: number; day: number };
     endDate: { month: number; day: number };

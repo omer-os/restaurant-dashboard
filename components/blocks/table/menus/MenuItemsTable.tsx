@@ -9,6 +9,8 @@ import { MenuItem } from "@lib/interfacses";
 import TableRow from "./TableRow";
 import { MenuitemContext } from "./MenuContext";
 import DeleteDialog from "@components/blocks/dialog/DeleteDialog";
+import Link from "next/link";
+import { BsArrowLeft } from "react-icons/bs";
 
 const tableHeadings: string[] = [
   "Image",
@@ -56,6 +58,7 @@ const mI: MenuItem[] = [
         additionalCost: 3,
       },
     ],
+    status: "basedOnCategory",
   },
 ];
 
@@ -115,6 +118,7 @@ export default function MenuItemsTable(): JSX.Element {
           additionalCost: 0,
         },
       ],
+      status: "basedOnCategory",
     };
 
     // Add the new item to the menuItems state
@@ -122,18 +126,29 @@ export default function MenuItemsTable(): JSX.Element {
   };
 
   return (
-    <div className="overflow-x-auto overflow-y-scroll max-h-[70vh]">
+    <div className="overflow-x-auto overflow-y-scroll max-h-[75vh]">
+      <div className="w-max sticky left-0">
+        <Link href="/menu">
+          <Button startIcon={<BsArrowLeft />} bg={"white"}>
+            Go Back
+          </Button>
+        </Link>
+      </div>
+
       <div className="sticky left-0">
         <div className="text-3xl font-bold">All Menu Items</div>
 
-        <div className="mb-3 mt-6">
-          <TextInput
-            startIcon={<FiSearch />}
-            State={searchTerm}
-            setState={setSearchTerm}
-            placeholder="Search for menu Items..."
-            className="md:max-w-[300px]"
-          />
+        <div className="my-4">
+          <div className="flex relative">
+            <FiSearch className="text-gray-500 absolute left-2.5 top-2.5" />
+            <input
+              type="text"
+              placeholder="Search for menus..."
+              className="px-4 border w-full border-gray-300 rounded py-2 pl-8"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 

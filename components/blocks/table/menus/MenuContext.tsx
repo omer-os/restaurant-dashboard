@@ -22,6 +22,7 @@ export const MenuitemContext = createContext<MenuItemContextProps>({
     basePrice: 0,
     variants: [],
     extras: [],
+    status: "basedOnCategory",
     activeDate: {
       startDate: { month: 1, day: 1 },
       endDate: { month: 1, day: 1 },
@@ -46,6 +47,7 @@ export const MenuItemProvider = ({
     basePrice: 0,
     variants: [],
     extras: [],
+    status: "basedOnCategory",
     activeDate: {
       startDate: { month: 1, day: 1 },
       endDate: { month: 1, day: 1 },
