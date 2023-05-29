@@ -19,7 +19,10 @@ export default async function page() {
   const categoriesSnapshot = await categoriesCol.get();
 
   let categories = categoriesSnapshot.docs.map((doc) => {
-    return doc.data();
+    return {
+      ...doc.data(),
+      id: doc.id,
+    }
   });
 
   if (categoriesSnapshot.empty) {

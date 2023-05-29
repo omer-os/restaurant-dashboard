@@ -172,8 +172,10 @@ export default function CategoriesTable({
     setSearchQuery,
   } = useCategoryData(CATEGORIES);
 
-  const updateHandeler = () => {
-    setTimeout(() => {
+  const updateHandeler = async () => {
+    console.log(selectedCategory);
+    
+    setTimeout(async () => {
       const updatedCategories = categories.map((category) =>
         category.id === selectedCategory?.id
           ? {
@@ -189,29 +191,41 @@ export default function CategoriesTable({
           : category
       );
       setCategories(updatedCategories);
+  
+      // Check if the selectedCategory and its id is defined
+      if (selectedCategory && selectedCategory.id) {
+        const restaurantCol = collection(db, "restaurants");
+        const restaurantDoc = doc(restaurantCol, restaurantId);
+        const categoryCol = collection(restaurantDoc, "categories");
+        const categoryDoc = doc(categoryCol, selectedCategory.id);
+  
+        // Try-catch block to handle potential Firestore errors
+        try {
+          await setDoc(
+            categoryDoc,
+            {
+              name: categoryName,
+              image: categoryImage,
+              status: categoryStatus,
+              activeDate: {
+                startDate: activeDate.startDate,
+                endDate: activeDate.endDate,
+              },
+            },
+            { merge: true }
+          );
+        } catch (error) {
+          console.error("Error updating category: ", error);
+        }
+      } else {
+        console.log("No selectedCategory or selectedCategory.id is undefined.");
+      }
+  
       setOpenUpdateModal(false);
-      const restaurantCol = collection(db, "restaurants");
-      const restaurantDoc = doc(restaurantCol, restaurantId);
-      const categoryCol = collection(restaurantDoc, "categories");
-      const categoryDoc = doc(categoryCol, selectedCategory?.id);
-      setDoc(
-        categoryDoc,
-        {
-          name: categoryName,
-          image: categoryImage,
-          status: categoryStatus,
-          activeDate: {
-            startDate: activeDate.startDate,
-            endDate: activeDate.endDate,
-          },
-        },
-        { merge: true }
-      );
     }, 1000);
-
   };
 
-  const addCategoryHandler = () => {
+    const addCategoryHandler = () => {
     const newCategory = {
       image: "https://placehold.co/300x300",
       name: "New Category",

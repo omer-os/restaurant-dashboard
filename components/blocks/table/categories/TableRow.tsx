@@ -15,7 +15,6 @@ const TableRow = ({
 
   let statusClasses;
 
-  console.log(category);
 
   switch (status) {
     case "Active":
