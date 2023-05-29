@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs/app-beta";
 import { Metadata } from "next";
 import "styles/globals.css";
 import { Cairo } from "next/font/google";
@@ -21,7 +22,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <ClerkProvider>
       <html lang="en">
         <body className={cairo.className + " bg-zinc-200"}>
           <ClinetLayoutWrapper>
@@ -29,6 +30,6 @@ export default async function RootLayout({
           </ClinetLayoutWrapper>
         </body>
       </html>
-    </>
+    </ClerkProvider>
   );
 }

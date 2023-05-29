@@ -11,6 +11,7 @@ export default function MainNavBar() {
   const { openSideBar, setOpenSideBar } = useContext(ClientWrapperContext);
   const segments = useSelectedLayoutSegments();
 
+
   return (
     <div className="border-b z-50 sticky top-0 left-0 md:py-4 py-3 px-4 flex bg-white justify-between items-center">
       <h1 className="font-bold flex gap-2 items-center">
@@ -33,7 +34,7 @@ export default function MainNavBar() {
         )}
       </h1>
 
-      <div className="rightSide">
+      <div className="flex gap-4">
         <Button
           padding={"sm"}
           bg={"white"}
@@ -43,6 +44,14 @@ export default function MainNavBar() {
         >
           {openSideBar ? <IoMdClose size={15} /> : <FiMenu size={15} />}
         </Button>
+
+        {/* <div className="w-10 h-10 rounded-full">
+          <img
+            src={currentUser?.photoURL || ""}
+            alt="profile"
+            className="w-full h-full rounded-full object-cover"
+          />
+        </div> */}
       </div>
     </div>
   );

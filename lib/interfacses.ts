@@ -1,3 +1,23 @@
+export interface Restaurant {
+  ownerId: string;
+  name: string;
+  logo_url: string;
+  address: string;
+  phone_number: string;
+  email: string;
+  instagram: string;
+  facebook: string;
+  website: string;
+  bar_code_img_url: string;
+  subscription: 'free' | 'pro';
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  categories: Category[];
+}
+
+
 export interface Category {
   image: string;
   name: string;

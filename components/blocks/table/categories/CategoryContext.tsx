@@ -9,6 +9,7 @@ interface CategoryContextProps {
   setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
   OpenUpdateModal: boolean; // Add the OpenUpdateModal state
   setOpenUpdateModal: React.Dispatch<React.SetStateAction<boolean>>;
+
 }
 
 export const CategoriesContext = createContext<CategoryContextProps>({
@@ -36,7 +37,11 @@ export const CategoriesContext = createContext<CategoryContextProps>({
   setOpenUpdateModal: () => {},
 });
 
-export const CategoryProvider = ({ children }: { children: ReactNode }) => {
+export const CategoryProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>({
     image: "",
@@ -57,6 +62,9 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   });
   const [OpenUpdateModal, setOpenUpdateModal] = useState(false); // Initialize the OpenUpdateModal state with false
 
+
+
+
   return (
     <CategoriesContext.Provider
       value={{
@@ -66,6 +74,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         setSelectedCategory,
         OpenUpdateModal,
         setOpenUpdateModal,
+
       }}
     >
       {children}

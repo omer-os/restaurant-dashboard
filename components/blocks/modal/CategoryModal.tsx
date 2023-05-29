@@ -78,6 +78,10 @@ const CategoryModal = ({
 
   const handleSave = () => {
     onSave();
+
+    
+
+
     setOpen(false);
   };
 

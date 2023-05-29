@@ -1,7 +1,11 @@
 import { Category } from "@lib/interfacses";
 import TableActions from "./TableActions";
 
-const TableRow = ({ category }: { category: Category }) => {
+const TableRow = ({
+  category,
+}: {
+  category: Category;
+}) => {
   const status =
     category.status === true
       ? "Active"
@@ -10,6 +14,8 @@ const TableRow = ({ category }: { category: Category }) => {
       : "Auto";
 
   let statusClasses;
+
+  console.log(category);
 
   switch (status) {
     case "Active":

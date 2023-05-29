@@ -5,6 +5,8 @@ import TableRow from "./TableRow";
 import { Category } from "@lib/interfacses";
 import { useCategoryData } from "@components/hooks/useCategoryData";
 import CategoryModal from "@components/blocks/modal/CategoryModal";
+import { db } from "@lib/firebase-config";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const tableHeadings = ["Image", "Name", "Items", "Status", "Actions"];
 const categoryData: Category[] = [
@@ -145,7 +147,13 @@ const categoryData: Category[] = [
     },
   },
 ];
-export default function CategoriesTable() {
+export default function CategoriesTable({
+  CATEGORIES,
+  restaurantId,
+}: {
+  CATEGORIES: any;
+  restaurantId: string;
+}) {
   const {
     categories,
     setCategories,
@@ -162,7 +170,7 @@ export default function CategoriesTable() {
     setActiveDate,
     searchQuery,
     setSearchQuery,
-  } = useCategoryData(categoryData);
+  } = useCategoryData(CATEGORIES);
 
   const updateHandeler = () => {
     setTimeout(() => {
@@ -182,17 +190,33 @@ export default function CategoriesTable() {
       );
       setCategories(updatedCategories);
       setOpenUpdateModal(false);
+      const restaurantCol = collection(db, "restaurants");
+      const restaurantDoc = doc(restaurantCol, restaurantId);
+      const categoryCol = collection(restaurantDoc, "categories");
+      const categoryDoc = doc(categoryCol, selectedCategory?.id);
+      setDoc(
+        categoryDoc,
+        {
+          name: categoryName,
+          image: categoryImage,
+          status: categoryStatus,
+          activeDate: {
+            startDate: activeDate.startDate,
+            endDate: activeDate.endDate,
+          },
+        },
+        { merge: true }
+      );
     }, 1000);
+
   };
 
   const addCategoryHandler = () => {
-    const newCategoryId = Date.now().toString(); // Using timestamp as a temporary unique ID
     const newCategory = {
       image: "https://placehold.co/300x300",
       name: "New Category",
       itemsNo: 0,
       status: true,
-      id: newCategoryId,
       activeDate: {
         startDate: {
           day: 1,
@@ -204,7 +228,19 @@ export default function CategoriesTable() {
         },
       },
     };
-    setCategories([newCategory, ...categories]);
+    const restaurantCol = collection(db, "restaurants");
+    const restaurantDoc = doc(restaurantCol, restaurantId);
+    const categoryCol = collection(restaurantDoc, "categories");
+    const categoryDoc = doc(categoryCol);
+    setDoc(categoryDoc, newCategory, { merge: true });
+
+    // add id to new category
+    const newCategoryWithId = {
+      ...newCategory,
+      id: categoryDoc.id,
+    };
+
+    setCategories([newCategoryWithId, ...categories]);
   };
 
   return (
